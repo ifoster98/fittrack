@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Ianf.Fittrack.Domain 
+namespace Ianf.Fittrack.Workouts.Domain 
 {
     public enum ExerciseType {
         BenchPress,

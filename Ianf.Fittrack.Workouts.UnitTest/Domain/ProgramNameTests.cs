@@ -1,20 +1,21 @@
+#nullable disable // Explicitly allow nulls for testing of types.
 using System;
 using System.Collections.Generic;
-using Ianf.Fittrack.Domain;
+using Ianf.Fittrack.Workouts.Domain;
 using Xunit;
 
-namespace Ianf.Fittrack.UnitTest.Domain
+namespace Ianf.Fittrack.UnitTest.Workouts.Domain
 {
-    public class WeightTests
+    public class ProgramNameTests
     {
         [Fact]
-        public void TestCreateWeight()
+        public void TestCreateProgramName()
         {
             // Assemble
-            var testValue = 2.5; 
+            var testValue = "Test";
  
             // Act
-            var newItem = Weight.CreateWeight(testValue);
+            var newItem = ProgramName.CreateProgramName(testValue);
  
             // Assert
             newItem
@@ -25,13 +26,12 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateWeightFailNegative()
+        public void TestCreateProgramNameFailNull()
         {
             // Assemble
-            var testValue = -2.5; 
  
             // Act
-            var newItem = Weight.CreateWeight(testValue);
+            var newItem = ProgramName.CreateProgramName(null);
  
             // Assert
             newItem
@@ -42,13 +42,13 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateWeightFail()
+        public void TestCreateProgramNameFailEmpty()
         {
             // Assemble
-            var testValue = 3.456;
+            var testValue = string.Empty;
  
             // Act
-            var newItem = Weight.CreateWeight(testValue);
+            var newItem = ProgramName.CreateProgramName(testValue);
  
             // Assert
             newItem
@@ -59,15 +59,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateWeightEqual()
+        public void TestCreateProgramNameEqual()
         {
             // Assemble
-            var testFirstValue = 1.25;
-            var testSecondValue = 1.25;
+            var testFirstValue = "Test";
+            var testSecondValue = "Test";
  
             // Act
-            var testFirstItem = Weight.CreateWeight(testFirstValue);
-            var testSecondItem = Weight.CreateWeight(testSecondValue);
+            var testFirstItem = ProgramName.CreateProgramName(testFirstValue);
+            var testSecondItem = ProgramName.CreateProgramName(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert
@@ -75,15 +75,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateWeightNotEqual()
+        public void TestCreateProgramNameNotEqual()
         {
             // Assemble
-            var testFirstValue = 5;
-            var testSecondValue = 7.5;
+            var testFirstValue = "Test";
+            var testSecondValue = "TestTwo";
  
             // Act
-            var testFirstItem = Weight.CreateWeight(testFirstValue);
-            var testSecondItem = Weight.CreateWeight(testSecondValue);
+            var testFirstItem = ProgramName.CreateProgramName(testFirstValue);
+            var testSecondItem = ProgramName.CreateProgramName(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert

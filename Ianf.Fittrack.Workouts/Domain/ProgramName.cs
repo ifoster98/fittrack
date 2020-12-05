@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using static LanguageExt.Prelude;
 
-namespace Ianf.Fittrack.Domain
+namespace Ianf.Fittrack.Workouts.Domain
 {
     public struct ProgramName : IEquatable<ProgramName>
     {

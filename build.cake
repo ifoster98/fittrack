@@ -11,10 +11,10 @@ var configuration = Argument("configuration", "Release");
 
 Task("Clean")
 .Does(() => {
-   CleanDirectory($"./Ianf.Fittrack.Domain/bin");
-   CleanDirectory($"./Ianf.Fittrack.Domain/obj");
-   CleanDirectory($"./Ianf.Fittrack.UnitTest.Domain/bin");
-   CleanDirectory($"./Ianf.Fittrack.UnitTest.Domain/obj");
+   CleanDirectory($"./Ianf.Fittrack.Workouts.Domain/bin");
+   CleanDirectory($"./Ianf.Fittrack.Workouts.Domain/obj");
+   CleanDirectory($"./Ianf.Fittrack.Workouts.UnitTest.Domain/bin");
+   CleanDirectory($"./Ianf.Fittrack.Workouts.UnitTest.Domain/obj");
 });
 
 Task("Build")

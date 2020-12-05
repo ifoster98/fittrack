@@ -1,21 +1,20 @@
-#nullable disable // Explicitly allow nulls for testing of types.
 using System;
 using System.Collections.Generic;
-using Ianf.Fittrack.Domain;
+using Ianf.Fittrack.Workouts.Domain;
 using Xunit;
 
-namespace Ianf.Fittrack.UnitTest.Domain
+namespace Ianf.Fittrack.Workouts.UnitTest.Domain
 {
-    public class ProgramNameTests
+    public class PositiveIntTests
     {
         [Fact]
-        public void TestCreateProgramName()
+        public void TestCreatePositiveInt()
         {
             // Assemble
-            var testValue = "Test";
+            var testValue = 1;
  
             // Act
-            var newItem = ProgramName.CreateProgramName(testValue);
+            var newItem = PositiveInt.CreatePositiveInt(testValue);
  
             // Assert
             newItem
@@ -26,12 +25,13 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateProgramNameFailNull()
+        public void TestCreatePositiveIntZeroFail()
         {
             // Assemble
+            var testValue = 0;
  
             // Act
-            var newItem = ProgramName.CreateProgramName(null);
+            var newItem = PositiveInt.CreatePositiveInt(testValue);
  
             // Assert
             newItem
@@ -42,13 +42,13 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateProgramNameFailEmpty()
+        public void TestCreatePositiveIntNegativeFail()
         {
             // Assemble
-            var testValue = string.Empty;
+            var testValue = -42;
  
             // Act
-            var newItem = ProgramName.CreateProgramName(testValue);
+            var newItem = PositiveInt.CreatePositiveInt(testValue);
  
             // Assert
             newItem
@@ -59,15 +59,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateProgramNameEqual()
+        public void TestCreatePositiveIntEqual()
         {
             // Assemble
-            var testFirstValue = "Test";
-            var testSecondValue = "Test";
+            var testFirstValue = 42;
+            var testSecondValue = 42;
  
             // Act
-            var testFirstItem = ProgramName.CreateProgramName(testFirstValue);
-            var testSecondItem = ProgramName.CreateProgramName(testSecondValue);
+            var testFirstItem = PositiveInt.CreatePositiveInt(testFirstValue);
+            var testSecondItem = PositiveInt.CreatePositiveInt(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert
@@ -75,15 +75,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreateProgramNameNotEqual()
+        public void TestCreatePositiveIntNotEqual()
         {
             // Assemble
-            var testFirstValue = "Test";
-            var testSecondValue = "TestTwo";
+            var testFirstValue = 41;
+            var testSecondValue = 42;
  
             // Act
-            var testFirstItem = ProgramName.CreateProgramName(testFirstValue);
-            var testSecondItem = ProgramName.CreateProgramName(testSecondValue);
+            var testFirstItem = PositiveInt.CreatePositiveInt(testFirstValue);
+            var testSecondItem = PositiveInt.CreatePositiveInt(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert

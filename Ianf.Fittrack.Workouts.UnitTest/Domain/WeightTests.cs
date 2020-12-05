@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
-using Ianf.Fittrack.Domain;
+using Ianf.Fittrack.Workouts.Domain;
 using Xunit;
 
-namespace Ianf.Fittrack.UnitTest.Domain
+namespace Ianf.Fittrack.UnitTest.Workouts.Domain
 {
-    public class PositiveIntTests
+    public class WeightTests
     {
         [Fact]
-        public void TestCreatePositiveInt()
+        public void TestCreateWeight()
         {
             // Assemble
-            var testValue = 1;
+            var testValue = 2.5; 
  
             // Act
-            var newItem = PositiveInt.CreatePositiveInt(testValue);
+            var newItem = Weight.CreateWeight(testValue);
  
             // Assert
             newItem
@@ -25,13 +25,13 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreatePositiveIntZeroFail()
+        public void TestCreateWeightFailNegative()
         {
             // Assemble
-            var testValue = 0;
+            var testValue = -2.5; 
  
             // Act
-            var newItem = PositiveInt.CreatePositiveInt(testValue);
+            var newItem = Weight.CreateWeight(testValue);
  
             // Assert
             newItem
@@ -42,13 +42,13 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreatePositiveIntNegativeFail()
+        public void TestCreateWeightFail()
         {
             // Assemble
-            var testValue = -42;
+            var testValue = 3.456;
  
             // Act
-            var newItem = PositiveInt.CreatePositiveInt(testValue);
+            var newItem = Weight.CreateWeight(testValue);
  
             // Assert
             newItem
@@ -59,15 +59,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreatePositiveIntEqual()
+        public void TestCreateWeightEqual()
         {
             // Assemble
-            var testFirstValue = 42;
-            var testSecondValue = 42;
+            var testFirstValue = 1.25;
+            var testSecondValue = 1.25;
  
             // Act
-            var testFirstItem = PositiveInt.CreatePositiveInt(testFirstValue);
-            var testSecondItem = PositiveInt.CreatePositiveInt(testSecondValue);
+            var testFirstItem = Weight.CreateWeight(testFirstValue);
+            var testSecondItem = Weight.CreateWeight(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert
@@ -75,15 +75,15 @@ namespace Ianf.Fittrack.UnitTest.Domain
         }
  
         [Fact]
-        public void TestCreatePositiveIntNotEqual()
+        public void TestCreateWeightNotEqual()
         {
             // Assemble
-            var testFirstValue = 41;
-            var testSecondValue = 42;
+            var testFirstValue = 5;
+            var testSecondValue = 7.5;
  
             // Act
-            var testFirstItem = PositiveInt.CreatePositiveInt(testFirstValue);
-            var testSecondItem = PositiveInt.CreatePositiveInt(testSecondValue);
+            var testFirstItem = Weight.CreateWeight(testFirstValue);
+            var testSecondItem = Weight.CreateWeight(testSecondValue);
             var result = testFirstItem.Equals(testSecondItem);
  
             // Assert
