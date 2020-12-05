@@ -13,8 +13,8 @@ Task("Clean")
 .Does(() => {
    CleanDirectory($"./Ianf.Fittrack.Domain/bin");
    CleanDirectory($"./Ianf.Fittrack.Domain/obj");
-   CleanDirectory($"./Ianf.Fittrack.UnitTest/bin");
-   CleanDirectory($"./Ianf.Fittrack.UnitTest/obj");
+   CleanDirectory($"./Ianf.Fittrack.UnitTest.Domain/bin");
+   CleanDirectory($"./Ianf.Fittrack.UnitTest.Domain/obj");
 });
 
 Task("Build")
