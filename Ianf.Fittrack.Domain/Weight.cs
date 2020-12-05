@@ -16,7 +16,7 @@ namespace Ianf.Fittrack.Domain
                 ? Some(new Weight(weight))
                 : None;
 
-        private static bool IsValid(double weight) => false;
+        private static bool IsValid(double weight) => weight > 0 && (weight % 0.5) == 0;
 
         public bool Equals(Weight other) => Value == other.Value;
     }
