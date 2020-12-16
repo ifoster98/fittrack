@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
+using static Ianf.Fittrack.Workouts.Domain.Convert;
+using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.Workouts.Services
 {
@@ -15,14 +18,18 @@ namespace Ianf.Fittrack.Workouts.Services
             _workoutRepository = workoutRepository;
         }
 
-        public Either<IEnumerable<Error>, PositiveInt> AddNewWorkout(Dto.Workout workout)
+        public Either<IEnumerable<Error>, PositiveInt> AddNewWorkout(Dto.Workout workout) => 
+            ToDomain(workout)
+                .Bind(ValidateWorkoutToAdd)
+                .Match<Either<IEnumerable<Error>, PositiveInt>>
+                (
+                    Left: (err) => Left(err),
+                    Right: (w) => _workoutRepository.SaveWorkout(w)
+                );
+
+        public static Either<IEnumerable<Error>, Domain.Workout> ValidateWorkoutToAdd(Domain.Workout workout)
         {
-            // Convert Dto to domain layer 
-
-            // Validate workout internally
-
-            // Save workout to persistance layer
-            _workoutRepository.SaveWorkout(workout);
+            return workout;
         }
     }
 }

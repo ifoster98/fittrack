@@ -49,6 +49,9 @@ namespace Ianf.Fittrack.UnitTest.Services
                 },
                 ActualExercises = new List<Dto.Exercise>()
             };
+            _workoutRepository
+                .Setup(w => w.SaveWorkout(It.IsAny<Workout>()))
+                .Returns(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt()));
 
             // Act
             var result = _workoutService.AddNewWorkout(newWorkout);

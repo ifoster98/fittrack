@@ -74,6 +74,36 @@ namespace Ianf.Fittrack.Workouts.Domain
 
         public static Either<IEnumerable<Error>, Workout> ToDomain(Dto.Workout workout)
         {
+            var errors = new List<Error>();
+            var plannedExercises = new List<Exercise>();
+            var actualExercises = new List<Exercise>();
+
+            workout.PlannedExercises.ForEach(e => {
+                var ex = ToDomain(e);
+                ex.Match
+                (
+                    Left: (err) => errors.AddRange(err),
+                    Right: (r) => plannedExercises.Add(r)
+                );
+            });
+
+            workout.ActualExercises.ForEach(e => {
+                var ex = ToDomain(e);
+                ex.Match(
+                    Left: (err) => errors.AddRange(err),
+                    Right: (r) => actualExercises.Add(r) 
+                );
+            });
+
+            var programName = new ProgramName();
+            ProgramName.CreateProgramName(workout.ProgramName)
+                .Match(
+                    None: () => errors.Add(new Error("Invalid program name.")),
+                    Some: (s) => programName = s
+                );
+
+            if(errors.Any()) return errors;
+            return new Workout(programName, workout.WorkoutTime, plannedExercises, actualExercises);
         }
     }
 }
