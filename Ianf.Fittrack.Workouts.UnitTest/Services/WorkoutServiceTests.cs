@@ -6,6 +6,7 @@ using Ianf.Fittrack.Workouts.Services;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using Moq;
 using Xunit;
+using System.Linq;
 
 namespace Ianf.Fittrack.UnitTest.Services
 {
@@ -61,6 +62,211 @@ namespace Ianf.Fittrack.UnitTest.Services
             result.Match(
                 Left: (err) => Assert.False(true, "Expected no errors to be returned."),
                 Right: (newId) => Assert.Equal(1, newId.Value)
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfProgramNameIsEmpty()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout() 
+            {
+                ProgramName = string.Empty,
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("ProgramName", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfExerciseOrderIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout() 
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 0,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Exercise", err.First().DtoType);
+                    Assert.Equal("Order", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfSetRepsIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout() 
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = -2,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Reps", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfSetWeightIsNotValid()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout() 
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130.1234,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Weight", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfSetOrderIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout() 
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130,
+                                Order = -4
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Order", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
             );
         }
     }

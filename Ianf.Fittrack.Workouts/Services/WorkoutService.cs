@@ -18,16 +18,17 @@ namespace Ianf.Fittrack.Workouts.Services
             _workoutRepository = workoutRepository;
         }
 
-        public Either<IEnumerable<Error>, PositiveInt> AddNewWorkout(Dto.Workout workout) => 
-            ToDomain(workout)
+        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.Workout workout) => 
+            workout
+                .ToDomain()
                 .Bind(ValidateWorkoutToAdd)
-                .Match<Either<IEnumerable<Error>, PositiveInt>>
+                .Match<Either<IEnumerable<DtoValidationError>, PositiveInt>>
                 (
                     Left: (err) => Left(err),
                     Right: (w) => _workoutRepository.SaveWorkout(w)
                 );
 
-        public static Either<IEnumerable<Error>, Domain.Workout> ValidateWorkoutToAdd(Domain.Workout workout)
+        public static Either<IEnumerable<DtoValidationError>, Domain.Workout> ValidateWorkoutToAdd(Domain.Workout workout)
         {
             return workout;
         }
