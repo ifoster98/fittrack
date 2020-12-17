@@ -5,7 +5,6 @@ using LanguageExt;
 using System.Collections.Generic;
 using System.Linq;
 using static Ianf.Fittrack.Workouts.Domain.Convert;
-using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.Workouts.Services
 {
@@ -22,11 +21,7 @@ namespace Ianf.Fittrack.Workouts.Services
             workout
                 .ToDomain()
                 .Bind(ValidateWorkoutToAdd)
-                .Match<Either<IEnumerable<DtoValidationError>, PositiveInt>>
-                (
-                    Left: (err) => Left(err),
-                    Right: (w) => _workoutRepository.SaveWorkout(w)
-                );
+                .Map(_workoutRepository.SaveWorkout);
 
         public static Either<IEnumerable<DtoValidationError>, Workout> ValidateWorkoutToAdd(Workout workout)
         {
