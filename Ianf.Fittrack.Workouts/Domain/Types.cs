@@ -13,15 +13,15 @@ namespace Ianf.Fittrack.Workouts.Domain
         BentOverRow
     }
 
-    public record Set(ExerciseType ExerciseType, PositiveInt Reps, Weight Weight, PositiveInt Order);
+    public record Set(ExerciseType ExerciseType, PositiveInt Reps, Weight Weight, PositiveInt Order) { };
 
-    public record Exercise(List<Set> Sets, PositiveInt Order);
+    public record Exercise(List<Set> Sets, PositiveInt Order) { };
 
-    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises, List<Exercise> ActualExercises);
+    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises, List<Exercise> ActualExercises) { };
 
-    public record Error(string ErrorMessage);
+    public record Error(string ErrorMessage) { };
 
-    public record DtoValidationError(string errorMessage, string DtoType, string DtoProperty) : Error(errorMessage);
+    public record DtoValidationError(string errorMessage, string DtoType, string DtoProperty) : Error(errorMessage) { };
 
     public static class Convert
     {
@@ -80,22 +80,38 @@ namespace Ianf.Fittrack.Workouts.Domain
             var plannedExercises = new List<Exercise>();
             var actualExercises = new List<Exercise>();
 
-            workout.PlannedExercises.ForEach(e => {
-                var ex = ToDomain(e);
-                ex.Match
-                (
-                    Left: (err) => errors.AddRange(err),
-                    Right: (r) => plannedExercises.Add(r)
-                );
-            });
+            if (workout.PlannedExercises == null)
+            {
+                errors.Add(new DtoValidationError("Planned exercises cannot be null.", "Workout", "PlannedExercises"));
+            }
+            else
+            {
+                workout.PlannedExercises.ForEach(e =>
+                {
+                    var ex = ToDomain(e);
+                    ex.Match
+                    (
+                        Left: (err) => errors.AddRange(err),
+                        Right: (r) => plannedExercises.Add(r)
+                    );
+                });
+            }
 
-            workout.ActualExercises.ForEach(e => {
-                var ex = ToDomain(e);
-                ex.Match(
-                    Left: (err) => errors.AddRange(err),
-                    Right: (r) => actualExercises.Add(r) 
-                );
-            });
+            if (workout.ActualExercises == null)
+            {
+                errors.Add(new DtoValidationError("Actual exercises cannot be null.", "Workout", "ActualExercises"));
+            }
+            else
+            {
+                workout.ActualExercises.ForEach(e =>
+                {
+                    var ex = ToDomain(e);
+                    ex.Match(
+                        Left: (err) => errors.AddRange(err),
+                        Right: (r) => actualExercises.Add(r)
+                    );
+                });
+            }
 
             var programName = new ProgramName();
             ProgramName.CreateProgramName(workout.ProgramName)

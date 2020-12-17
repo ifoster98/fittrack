@@ -269,5 +269,139 @@ namespace Ianf.Fittrack.UnitTest.Services
                 Right: (newId) => Assert.False(true, "Expected error.")
             );
         }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfPlannedExercisesListIsNull()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout()
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = null,
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedExercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddNewWorkoutFailsIfActualExercisesListIsNull()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout()
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>(),
+                ActualExercises = null
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("ActualExercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        // Reject if workout has actual exercises
+        [Fact]
+        public void TestAddNewWorkoutFailsIfActualExercisesListHasExercises()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout()
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+                ActualExercises = new List<Dto.Exercise>()
+                {
+                    new Dto.Exercise()
+                    {
+                        Order = 1,
+                        Sets = new List<Dto.Set>()
+                        {
+                            new Dto.Set()
+                            {
+                                ExerciseType = ExerciseType.Deadlift,
+                                Reps = 5,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                },
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("ActualExercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        // Reject if workout planned exercises is empty
+        [Fact]
+        public void TestAddNewWorkoutFailsIfPlannedExercisesListHasNoExercises()
+        {
+            // Assemble
+            var newWorkout = new Dto.Workout()
+            {
+                ProgramName = "Workout1",
+                WorkoutTime = workoutTime,
+                PlannedExercises = new List<Dto.Exercise>(),
+                ActualExercises = new List<Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddNewWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedExercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
     }
 }
