@@ -12,10 +12,8 @@ namespace Ianf.Fittrack.Workouts.Services
     {
         private readonly IWorkoutRepository _workoutRepository;
 
-        public WorkoutService(IWorkoutRepository workoutRepository)
-        {
+        public WorkoutService(IWorkoutRepository workoutRepository) =>
             _workoutRepository = workoutRepository;
-        }
 
         public Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.Workout workout) => 
             workout
@@ -31,5 +29,8 @@ namespace Ianf.Fittrack.Workouts.Services
             if (errors.Any()) return errors;
             return workout;
         }
+
+        public Option<Dto.Workout> GetNextWorkout() =>
+            _workoutRepository.GetNextWorkout().Map(s => s.ToDto());
     }
 }

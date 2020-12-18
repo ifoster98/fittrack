@@ -321,7 +321,6 @@ namespace Ianf.Fittrack.UnitTest.Services
             );
         }
 
-        // Reject if workout has actual exercises
         [Fact]
         public void TestAddNewWorkoutFailsIfActualExercisesListHasExercises()
         {
@@ -379,7 +378,6 @@ namespace Ianf.Fittrack.UnitTest.Services
             );
         }
 
-        // Reject if workout planned exercises is empty
         [Fact]
         public void TestAddNewWorkoutFailsIfPlannedExercisesListHasNoExercises()
         {
@@ -402,6 +400,27 @@ namespace Ianf.Fittrack.UnitTest.Services
                     Assert.Equal("PlannedExercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestGetNextWorkout()
+        {
+            // Assemble
+            var programName = ProgramName.CreateProgramName("Test Program").IfNone(new ProgramName());
+            var workoutTime = DateTime.Now;
+            var actualExercises = new List<Exercise>();
+            var plannedExercises = new List<Exercise>();
+            var w = new Workout(programName, workoutTime, plannedExercises, actualExercises);
+            _workoutRepository.Setup(w => w.GetNextWorkout()).Returns(w);
+
+            // Act
+            var nextWorkout = _workoutService.GetNextWorkout();
+
+            // Assert
+            nextWorkout.Match(
+                None: () => Assert.True(false, "Should have found a workout."),
+                Some: (s) => Assert.Equal(s.ProgramName, w.ProgramName.Value)
             );
         }
     }

@@ -50,6 +50,14 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Set(set.ExerciseType, reps, weight, order);
         }
 
+        public static Dto.Set ToDto(this Set set)  =>
+            new Dto.Set() {
+                ExerciseType = set.ExerciseType,
+                Reps = set.Reps.Value,
+                Weight = set.Weight.Value,
+                Order = set.Order.Value
+            };
+
         public static Either<IEnumerable<DtoValidationError>, Exercise> ToDomain(this Dto.Exercise exercise)
         {
             var errors = new List<DtoValidationError>();
@@ -73,6 +81,12 @@ namespace Ianf.Fittrack.Workouts.Domain
             if(errors.Any()) return errors;
             return new Exercise(sets, order);
         }
+
+        public static Dto.Exercise ToDto(this Exercise exercise) =>
+            new Dto.Exercise() {
+                Order = exercise.Order.Value,
+                Sets = exercise.Sets.Select(s => s.ToDto()).ToList()
+            };
 
         public static Either<IEnumerable<DtoValidationError>, Workout> ToDomain(this Dto.Workout workout)
         {
@@ -123,5 +137,13 @@ namespace Ianf.Fittrack.Workouts.Domain
             if(errors.Any()) return errors;
             return new Workout(programName, workout.WorkoutTime, plannedExercises, actualExercises);
         }
+
+        public static Dto.Workout ToDto(this Workout workout) =>
+            new Dto.Workout() {
+                WorkoutTime = workout.WorkoutTime,
+                ProgramName = workout.ProgramName.Value,
+                PlannedExercises = workout.PlannedExercises.Select(p => p.ToDto()).ToList(),
+                ActualExercises = workout.ActualExercises.Select(a => a.ToDto()).ToList()
+            };
     }
 }

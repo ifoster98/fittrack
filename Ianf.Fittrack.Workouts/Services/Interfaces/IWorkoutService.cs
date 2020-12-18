@@ -7,5 +7,7 @@ namespace Ianf.Fittrack.Workouts.Services.Interfaces
     public interface IWorkoutService
     {
         Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.Workout workout);
+
+        Option<Dto.Workout> GetNextWorkout();
     }
 }
