@@ -13,9 +13,9 @@ namespace Ianf.Fittrack.Workouts.Domain
         BentOverRow
     }
 
-    public record Set(ExerciseType ExerciseType, PositiveInt Reps, Weight Weight, PositiveInt Order) { };
+    public record Set(PositiveInt Reps, Weight Weight, PositiveInt Order) { };
 
-    public record Exercise(List<Set> Sets, PositiveInt Order) { };
+    public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { };
 
     public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises, List<Exercise> ActualExercises) { };
 
@@ -47,12 +47,11 @@ namespace Ianf.Fittrack.Workouts.Domain
                     Some: (s) => order = s
                 );
             if(errors.Any()) return errors;
-            return new Set(set.ExerciseType, reps, weight, order);
+            return new Set(reps, weight, order);
         }
 
         public static Dto.Set ToDto(this Set set)  =>
             new Dto.Set() {
-                ExerciseType = set.ExerciseType,
                 Reps = set.Reps.Value,
                 Weight = set.Weight.Value,
                 Order = set.Order.Value
@@ -79,11 +78,12 @@ namespace Ianf.Fittrack.Workouts.Domain
                     Some: (s) => order = s
                 );
             if(errors.Any()) return errors;
-            return new Exercise(sets, order);
+            return new Exercise(exercise.ExerciseType, sets, order);
         }
 
         public static Dto.Exercise ToDto(this Exercise exercise) =>
             new Dto.Exercise() {
+                ExerciseType = exercise.ExerciseType,
                 Order = exercise.Order.Value,
                 Sets = exercise.Sets.Select(s => s.ToDto()).ToList()
             };

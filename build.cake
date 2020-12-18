@@ -12,10 +12,22 @@ var configuration = Argument("configuration", "Release");
 
 Task("Clean")
 .Does(() => {
-   CleanDirectory($"./Ianf.Fittrack.Workouts/Domain/bin");
-   CleanDirectory($"./Ianf.Fittrack.Workouts/Domain/obj");
-   CleanDirectory($"./Ianf.Fittrack.Workouts.UnitTest/Domain/bin");
-   CleanDirectory($"./Ianf.Fittrack.Workouts.UnitTest/Domain/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts/**/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts/**/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/**/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/**/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/**/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/**/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/obj");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/**/bin");
+   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/**/obj");
 });
 
 Task("Build")

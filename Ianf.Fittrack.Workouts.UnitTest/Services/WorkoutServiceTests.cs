@@ -36,12 +36,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = 1
@@ -78,12 +78,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = 1
@@ -119,12 +119,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 0,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = 1
@@ -160,12 +160,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = -2,
                                 Weight = 130,
                                 Order = 1
@@ -201,12 +201,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130.1234,
                                 Order = 1
@@ -242,12 +242,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = -4
@@ -333,12 +333,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = 1
@@ -350,12 +350,12 @@ namespace Ianf.Fittrack.UnitTest.Services
                 {
                     new Dto.Exercise()
                     {
+                        ExerciseType = ExerciseType.Deadlift,
                         Order = 1,
                         Sets = new List<Dto.Set>()
                         {
                             new Dto.Set()
                             {
-                                ExerciseType = ExerciseType.Deadlift,
                                 Reps = 5,
                                 Weight = 130,
                                 Order = 1
