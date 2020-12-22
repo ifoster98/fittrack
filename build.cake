@@ -1,39 +1,29 @@
-
+#addin nuget:?package=Cake.Docker&version=0.10.0
+using System.Threading;
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
 
 var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
+var solution = Argument("solution", "./fittrack.sln");
+var dockerDirectory = Argument("dockerDirectory", "./Ianf.Fittrack.Workouts.DB/Docker");
+var homeDirectory = Argument("homeDirectory", "/Users/ianfoster/dev/fittrack/");
+var sqlDocker = Argument("sqlDocker", "sql1");
 
 ///////////////////////////////////////////////////////////////////////////////
-// TASKS
+// BUILD TASKS
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("Clean")
 .Does(() => {
-   CleanDirectories($"./Ianf.Fittrack.Workouts/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts/**/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts/**/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/**/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF/**/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/**/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.EF.Tests/**/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/obj");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/**/bin");
-   CleanDirectories($"./Ianf.Fittrack.Workouts.UnitTest/**/obj");
+   DotNetCoreClean(solution);
 });
 
 Task("Build")
 .IsDependentOn("Clean")
 .Does(() => {
-   DotNetCoreBuild("./fittrack.sln", new DotNetCoreBuildSettings
+   DotNetCoreBuild(solution, new DotNetCoreBuildSettings
    {
       Configuration = configuration,
    });
@@ -42,11 +32,102 @@ Task("Build")
 Task("Test")
 .IsDependentOn("Build")
 .Does(() => {
-    DotNetCoreTest("./fittrack.sln", new DotNetCoreTestSettings
+    DotNetCoreTest(solution, new DotNetCoreTestSettings
     {
        Configuration = configuration,
        NoBuild = true
     });
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// TEST DB TASKS
+///////////////////////////////////////////////////////////////////////////////
+
+// Start docker container running sql server
+Task("Docker-Build")
+.Does(() => {
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("build")
+         .Append("-t")
+         .Append(sqlDocker)
+         .Append(dockerDirectory)
+      }
+   );
+});
+
+Task("Docker-Run")
+.IsDependentOn("Docker-Build")
+.Does(() => {
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("run")
+         .Append("-e \"ACCEPT_EULA=Y\"")
+         .Append("-e \"SA_PASSWORD=31Freeble$\"")
+         .Append("-p 1433:1433")
+         .Append($"--name {sqlDocker}")
+         .Append($"-h {sqlDocker}")
+         .Append("-d")
+         .Append("mcr.microsoft.com/mssql/server:2019-latest")
+      }
+   );
+});
+
+Task("Create-Schema")
+.IsDependentOn("Docker-Run")
+.Does(() => {
+   Thread.Sleep(2000);
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE SCHEMA Fittrack AUTHORIZATION dbo\"")
+      }
+   );
+});
+
+Task("Create-Database")
+.IsDependentOn("Create-Schema")
+.Does(() => {
+   Thread.Sleep(2000);
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE DATABASE Fittrack\"")
+      }
+   );
+});
+
+Task("Run-DbUp")
+.IsDependentOn("Create-Database")
+.Does(() => {
+   StartProcess("dotnet", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("run --project ./Ianf.Fittrack.Workouts.DB/Ianf.Fittrack.Workouts.DB.csproj")
+      }
+   );
+});
+
+// Run DB.Tests
+
+Task("Docker-Stop")
+.Does(() => {
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("container")
+         .Append("stop")
+         .Append(sqlDocker)
+      }
+   );
+});
+
+Task("Docker-Remove")
+.IsDependentOn("Docker-Stop")
+.Does(() => {
+   StartProcess("docker", new ProcessSettings {
+      Arguments = new ProcessArgumentBuilder()
+         .Append("container")
+         .Append("rm")
+         .Append(sqlDocker)
+      }
+   );
 });
 
 RunTarget(target);
