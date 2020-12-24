@@ -4,6 +4,7 @@ using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using static Ianf.Fittrack.Workouts.Domain.Convert;
 
 namespace Ianf.Fittrack.Workouts.Services
@@ -15,13 +16,13 @@ namespace Ianf.Fittrack.Workouts.Services
         public WorkoutService(IWorkoutRepository workoutRepository) =>
             _workoutRepository = workoutRepository;
 
-        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.Workout workout) => 
-            workout
+        public async Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout) => 
+            await workout
                 .ToDomain()
-                .Bind(ValidateWorkoutToAdd)
-                .Map(_workoutRepository.SaveWorkout);
+                .BindAsync(ValidateWorkoutToAdd)
+                .MapAsync(w => _workoutRepository.SaveWorkoutAsync(w));
 
-        public static Either<IEnumerable<DtoValidationError>, Workout> ValidateWorkoutToAdd(Workout workout)
+        public static async Task<Either<IEnumerable<DtoValidationError>, Workout>> ValidateWorkoutToAdd(Workout workout)
         {
             var errors = new List<DtoValidationError>();
             if (workout.PlannedExercises.Count == 0) errors.Add(new DtoValidationError("Must have planned exercises mapped in a new workout.", "Workout", "PlannedExercises"));
@@ -29,7 +30,11 @@ namespace Ianf.Fittrack.Workouts.Services
             return workout;
         }
 
-        public Option<Dto.Workout> GetNextWorkout() =>
-            _workoutRepository.GetNextWorkout().Map(s => s.ToDto());
+        public async Task<Option<Dto.Workout>> GetNextWorkoutAsync() 
+        {
+            var foo = await _workoutRepository
+                .GetNextWorkoutAsync();
+            return foo.Map(s => s.ToDto());
+        }
     }
 }

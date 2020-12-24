@@ -3,6 +3,7 @@ using Ianf.Fittrack.Workouts.Domain;
 using System;
 using System.Collections.Generic;
 using LanguageExt;
+using System.Threading.Tasks;
 
 namespace Ianf.Fittrack.Workouts.Repositories
 {
@@ -12,7 +13,7 @@ namespace Ianf.Fittrack.Workouts.Repositories
 
         public WorkoutRepository(FittrackDbContext context) => _dbContext = context;
 
-        public PositiveInt SaveWorkout(Workout workout)
+        public async Task<PositiveInt> SaveWorkoutAsync(Workout workout)
         {
             var entity = workout.ToEntity();
             _dbContext.Workout.Add(entity);
@@ -20,12 +21,9 @@ namespace Ianf.Fittrack.Workouts.Repositories
             return PositiveInt.CreatePositiveInt(entity.Id).IfNone(new PositiveInt());
         } 
 
-        public Option<Workout> GetNextWorkout()
+        public Task<Option<Workout>> GetNextWorkoutAsync()
         {
-            var programName = ProgramName.CreateProgramName("Test Program").IfNone(new ProgramName());
-            var workoutTime = DateTime.Now;
-            var plannedExercises = new List<Exercise>();
-            return new Workout(programName, workoutTime, plannedExercises);
+            throw new NotImplementedException();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
         protected DbContextOptions<FittrackDbContext> ContextOptions { get; }
 
         [Fact]
-        public void TestSaveWorkout() 
+        public async void TestSaveWorkout() 
         {
             using(var context = new FittrackDbContext(ContextOptions))
             {
@@ -48,10 +48,11 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
 
                 // Act
                 var repository = new WorkoutRepository(context);
-                repository.SaveWorkout(workout);
+                await repository.SaveWorkoutAsync(workout);
 
                 // Assert
-                Assert.Single(context.Workouts);
+                var foo = await context.Workout.CountAsync();
+                Assert.Equal(1, foo);
             }
         }
     }

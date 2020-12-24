@@ -8,6 +8,8 @@ using Ianf.Fittrack.Workouts.Services.Interfaces;
 using Moq;
 using Xunit;
 using System.Linq;
+using System.Threading.Tasks;
+using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.UnitTest.Services
 {
@@ -25,7 +27,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutSuccess()
+        public async void TestAddNewWorkoutAsyncSuccess()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -51,14 +53,14 @@ namespace Ianf.Fittrack.UnitTest.Services
                 }
             };
             _workoutRepository
-                .Setup(w => w.SaveWorkout(It.IsAny<Workout>()))
-                .Returns(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt()));
+                .Setup(w => w.SaveWorkoutAsync(It.IsAny<Workout>()))
+                .Returns(Task.FromResult(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())));
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
-            _workoutRepository.Verify(w => w.SaveWorkout(It.IsAny<Workout>()));
+            _workoutRepository.Verify(w => w.SaveWorkoutAsync(It.IsAny<Workout>()));
             result.Match(
                 Left: (err) => Assert.False(true, "Expected no errors to be returned."),
                 Right: (newId) => Assert.Equal(1, newId.Value)
@@ -66,7 +68,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfProgramNameIsEmpty()
+        public async void TestAddNewWorkoutAsyncFailsIfProgramNameIsEmpty()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -93,7 +95,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -106,7 +108,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExerciseOrderIsNotPositive()
+        public async void TestAddNewWorkoutAsyncFailsIfExerciseOrderIsNotPositive()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -133,7 +135,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -146,7 +148,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetRepsIsNotPositive()
+        public async void TestAddNewWorkoutAsyncFailsIfSetRepsIsNotPositive()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -173,7 +175,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -186,7 +188,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetWeightIsNotValid()
+        public async void TestAddNewWorkoutAsyncFailsIfSetWeightIsNotValid()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -213,7 +215,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -226,7 +228,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetOrderIsNotPositive()
+        public async void TestAddNewWorkoutAsyncFailsIfSetOrderIsNotPositive()
         {
             // Assemble
             var newWorkout = new Dto.Workout() 
@@ -253,7 +255,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -266,7 +268,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfPlannedExercisesListIsNull()
+        public async void TestAddNewWorkoutAsyncFailsIfPlannedExercisesListIsNull()
         {
             // Assemble
             var newWorkout = new Dto.Workout()
@@ -277,7 +279,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -290,7 +292,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfPlannedExercisesListHasNoExercises()
+        public async void TestAddNewWorkoutAsyncFailsIfPlannedExercisesListHasNoExercises()
         {
             // Assemble
             var newWorkout = new Dto.Workout()
@@ -301,7 +303,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
             result.Match(
@@ -314,22 +316,22 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestGetNextWorkout()
+        public async void TestGetNextWorkout()
         {
             // Assemble
             var programName = ProgramName.CreateProgramName("Test Program").IfNone(new ProgramName());
             var workoutTime = DateTime.Now;
             var plannedExercises = new List<Exercise>();
-            var w = new Workout(programName, workoutTime, plannedExercises);
-            _workoutRepository.Setup(w => w.GetNextWorkout()).Returns(w);
+            var g = new Workout(programName, workoutTime, plannedExercises);
+            _workoutRepository.Setup(w => w.GetNextWorkoutAsync()).Returns(Task.FromResult(Some(g)));
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout();
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync();
 
             // Assert
             nextWorkout.Match(
                 None: () => Assert.True(false, "Should have found a workout."),
-                Some: (s) => Assert.Equal(s.ProgramName, w.ProgramName.Value)
+                Some: (s) => Assert.Equal(s.ProgramName, g.ProgramName.Value)
             );
         }
     }

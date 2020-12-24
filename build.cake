@@ -35,7 +35,8 @@ Task("Test")
     DotNetCoreTest(solution, new DotNetCoreTestSettings
     {
        Configuration = configuration,
-       NoBuild = true
+       NoBuild = true,
+       Filter = "FullyQualifiedName!~WorkoutRepositoryTests"
     });
 });
 
@@ -105,7 +106,16 @@ Task("Run-DbUp")
    );
 });
 
-// Run DB.Tests
+Task("Repository-Tests")
+.IsDependentOn("Run-DbUp")
+.Does(() => {
+    DotNetCoreTest(solution, new DotNetCoreTestSettings
+    {
+       Configuration = configuration,
+       NoBuild = true,
+       Filter = "FullyQualifiedName~WorkoutRepositoryTests"
+    });
+});
 
 Task("Docker-Stop")
 .Does(() => {
@@ -128,6 +138,13 @@ Task("Docker-Remove")
          .Append(sqlDocker)
       }
    );
+});
+
+Task("DbTests")
+.IsDependentOn("Repository-Tests")
+.IsDependentOn("Docker-Remove")
+.Does(() => {
+
 });
 
 RunTarget(target);
