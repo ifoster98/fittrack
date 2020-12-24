@@ -17,7 +17,7 @@ namespace Ianf.Fittrack.Workouts.Domain
 
     public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { };
 
-    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises, List<Exercise> ActualExercises) { };
+    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises) { };
 
     public record Error(string ErrorMessage) { };
 
@@ -111,22 +111,6 @@ namespace Ianf.Fittrack.Workouts.Domain
                 });
             }
 
-            if (workout.ActualExercises == null)
-            {
-                errors.Add(new DtoValidationError("Actual exercises cannot be null.", "Workout", "ActualExercises"));
-            }
-            else
-            {
-                workout.ActualExercises.ForEach(e =>
-                {
-                    var ex = ToDomain(e);
-                    ex.Match(
-                        Left: (err) => errors.AddRange(err),
-                        Right: (r) => actualExercises.Add(r)
-                    );
-                });
-            }
-
             var programName = new ProgramName();
             ProgramName.CreateProgramName(workout.ProgramName)
                 .Match(
@@ -135,15 +119,14 @@ namespace Ianf.Fittrack.Workouts.Domain
                 );
 
             if(errors.Any()) return errors;
-            return new Workout(programName, workout.WorkoutTime, plannedExercises, actualExercises);
+            return new Workout(programName, workout.WorkoutTime, plannedExercises);
         }
 
         public static Dto.Workout ToDto(this Workout workout) =>
             new Dto.Workout() {
                 WorkoutTime = workout.WorkoutTime,
                 ProgramName = workout.ProgramName.Value,
-                PlannedExercises = workout.PlannedExercises.Select(p => p.ToDto()).ToList(),
-                ActualExercises = workout.ActualExercises.Select(a => a.ToDto()).ToList()
+                PlannedExercises = workout.PlannedExercises.Select(p => p.ToDto()).ToList()
             };
     }
 }

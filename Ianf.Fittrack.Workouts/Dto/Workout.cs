@@ -8,6 +8,5 @@ namespace Ianf.Fittrack.Dto
         public string ProgramName { get; set; }
         public DateTime WorkoutTime { get; set; }
         public List<Exercise> PlannedExercises { get; set; }
-        public List<Exercise> ActualExercises { get; set; }
     }
 }

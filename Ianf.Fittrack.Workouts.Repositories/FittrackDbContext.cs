@@ -1,4 +1,4 @@
-using Ianf.Fittrack.Workouts.Repositories.Entities;
+using Ianf.Fittrack.Workouts.Repositories.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ianf.Fittrack.Workouts.Repositories
@@ -9,8 +9,8 @@ namespace Ianf.Fittrack.Workouts.Repositories
 
         }
 
-        public DbSet<Set> Sets { get; set; }
-        public DbSet<Exercise> Exercises { get; set; }
-        public DbSet<Workout> Workouts { get; set; }
+        public DbSet<Set> Set { get; set; }
+        public DbSet<Exercise> Exercise { get; set; }
+        public DbSet<Workout> Workout { get; set; }
     }
 }

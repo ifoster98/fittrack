@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Ianf.Fittrack.Workouts.Repositories.Entities
+namespace Ianf.Fittrack.Workouts.Repositories.Entity
 {
     public class Exercise
     {

@@ -48,8 +48,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
             _workoutRepository
                 .Setup(w => w.SaveWorkout(It.IsAny<Workout>()))
@@ -90,8 +89,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
 
             // Act
@@ -131,8 +129,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
 
             // Act
@@ -172,8 +169,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
 
             // Act
@@ -213,8 +209,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
 
             // Act
@@ -254,8 +249,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             }
                         }
                     }
-                },
-                ActualExercises = new List<Dto.Exercise>()
+                }
             };
 
             // Act
@@ -279,8 +273,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = null,
-                ActualExercises = new List<Dto.Exercise>()
+                PlannedExercises = null
             };
 
             // Act
@@ -297,88 +290,6 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfActualExercisesListIsNull()
-        {
-            // Assemble
-            var newWorkout = new Dto.Workout()
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>(),
-                ActualExercises = null
-            };
-
-            // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
-
-            // Assert
-            result.Match(
-                Left: (err) => {
-                    Assert.Equal("Workout", err.First().DtoType);
-                    Assert.Equal("ActualExercises", err.First().DtoProperty);
-                },
-                Right: (newId) => Assert.False(true, "Expected error.")
-            );
-        }
-
-        [Fact]
-        public void TestAddNewWorkoutFailsIfActualExercisesListHasExercises()
-        {
-            // Assemble
-            var newWorkout = new Dto.Workout()
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130,
-                                Order = 1
-                            }
-                        }
-                    }
-                },
-                ActualExercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130,
-                                Order = 1
-                            }
-                        }
-                    }
-                },
-            };
-
-            // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
-
-            // Assert
-            result.Match(
-                Left: (err) => {
-                    Assert.Equal("Workout", err.First().DtoType);
-                    Assert.Equal("ActualExercises", err.First().DtoProperty);
-                },
-                Right: (newId) => Assert.False(true, "Expected error.")
-            );
-        }
-
-        [Fact]
         public void TestAddNewWorkoutFailsIfPlannedExercisesListHasNoExercises()
         {
             // Assemble
@@ -386,8 +297,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>(),
-                ActualExercises = new List<Dto.Exercise>()
+                PlannedExercises = new List<Dto.Exercise>()
             };
 
             // Act
@@ -409,9 +319,8 @@ namespace Ianf.Fittrack.UnitTest.Services
             // Assemble
             var programName = ProgramName.CreateProgramName("Test Program").IfNone(new ProgramName());
             var workoutTime = DateTime.Now;
-            var actualExercises = new List<Exercise>();
             var plannedExercises = new List<Exercise>();
-            var w = new Workout(programName, workoutTime, plannedExercises, actualExercises);
+            var w = new Workout(programName, workoutTime, plannedExercises);
             _workoutRepository.Setup(w => w.GetNextWorkout()).Returns(w);
 
             // Act
