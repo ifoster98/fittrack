@@ -2,6 +2,7 @@ using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,10 +31,10 @@ namespace Ianf.Fittrack.Workouts.Services
             return workout;
         }
 
-        public async Task<Option<Dto.Workout>> GetNextWorkoutAsync() 
+        public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay) 
         {
             var foo = await _workoutRepository
-                .GetNextWorkoutAsync();
+                .GetNextWorkoutAsync(workoutDay);
             return foo.Map(s => s.ToDto());
         }
     }

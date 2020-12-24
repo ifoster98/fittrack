@@ -323,10 +323,10 @@ namespace Ianf.Fittrack.UnitTest.Services
             var workoutTime = DateTime.Now;
             var plannedExercises = new List<Exercise>();
             var g = new Workout(programName, workoutTime, plannedExercises);
-            _workoutRepository.Setup(w => w.GetNextWorkoutAsync()).Returns(Task.FromResult(Some(g)));
+            _workoutRepository.Setup(w => w.GetNextWorkoutAsync(It.IsAny<DateTime>())).Returns(Task.FromResult(Some(g)));
 
             // Act
-            var nextWorkout = await _workoutService.GetNextWorkoutAsync();
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now);
 
             // Assert
             nextWorkout.Match(

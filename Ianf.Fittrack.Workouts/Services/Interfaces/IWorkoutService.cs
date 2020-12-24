@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ianf.Fittrack.Workouts.Domain;
@@ -9,6 +10,6 @@ namespace Ianf.Fittrack.Workouts.Services.Interfaces
     {
         Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout);
 
-        Task<Option<Dto.Workout>> GetNextWorkoutAsync();
+        Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay);
     }
 }

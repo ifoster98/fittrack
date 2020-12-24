@@ -20,7 +20,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
 
         protected DbContextOptions<FittrackDbContext> ContextOptions { get; }
 
-        [Fact]
+//        [Fact]
         public async void TestSaveWorkout() 
         {
             using(var context = new FittrackDbContext(ContextOptions))
@@ -28,7 +28,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
                 // Assemble
                 var workout = new Workout(
                     ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
-                    DateTime.Now,
+                    DateTime.UtcNow.AddDays(-1),
                     new List<Exercise>()
                     {
                         new Exercise(
@@ -45,14 +45,70 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
                         )
                     }
                 );
+                var repository = new WorkoutRepository(context);
 
                 // Act
-                var repository = new WorkoutRepository(context);
                 await repository.SaveWorkoutAsync(workout);
 
                 // Assert
-                var foo = await context.Workout.CountAsync();
-                Assert.Equal(1, foo);
+                var workoutCount = await context.Workout.CountAsync();
+                Assert.Equal(1, workoutCount);
+            }
+        }
+
+        [Fact]
+        public async void TestGetNextWorkout()
+        {
+            using(var context = new FittrackDbContext(ContextOptions))
+            {
+                // Assemble
+                var workout = new Workout(
+                    ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
+                    DateTime.UtcNow,
+                    new List<Exercise>()
+                    {
+                        new Exercise(
+                            ExerciseType.Deadlift,
+                            new List<Set>()
+                            {
+                                new Set(
+                                    PositiveInt.CreatePositiveInt(5).IfNone(new PositiveInt()),
+                                    Weight.CreateWeight(130.0).IfNone(new Weight()),
+                                    PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt()) 
+                                )
+                            },
+                            PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())
+                        )
+                    }
+                );
+//                var workoutTwo = new Workout(
+//                    ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
+//                    DateTime.UtcNow.AddDays(2),
+//                    new List<Exercise>()
+//                    {
+//                        new Exercise(
+//                            ExerciseType.Deadlift,
+//                            new List<Set>()
+//                            {
+//                                new Set(
+//                                    PositiveInt.CreatePositiveInt(5).IfNone(new PositiveInt()),
+//                                    Weight.CreateWeight(130.0).IfNone(new Weight()),
+//                                    PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt()) 
+//                                )
+//                            },
+//                            PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())
+//                        )
+//                    }
+//                );
+                var repository = new WorkoutRepository(context);
+//                await repository.SaveWorkoutAsync(workout);
+//                await repository.SaveWorkoutAsync(workoutTwo);
+
+                // Act
+                var nextWorkout = await repository.GetNextWorkoutAsync(DateTime.UtcNow);
+
+                // Assert
+                Assert.Equal(workout, nextWorkout);
             }
         }
     }
