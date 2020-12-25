@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static Ianf.Fittrack.Workouts.Domain.Convert;
+using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.Workouts.Services
 {
@@ -33,7 +34,13 @@ namespace Ianf.Fittrack.Workouts.Services
 
         public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay) 
         {
-            throw new NotImplementedException();
+            var workouts = await _workoutRepository.GetWorkoutsAfterDate(workoutDay);
+            return workouts.Any()
+                ? Some(workouts
+                    .OrderBy(w => w.WorkoutTime)
+                    .First()
+                    .ToDto())
+                : None;
         }
     }
 }

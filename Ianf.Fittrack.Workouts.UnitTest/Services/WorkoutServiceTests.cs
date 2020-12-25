@@ -20,17 +20,8 @@ namespace Ianf.Fittrack.UnitTest.Services
 
         private DateTime workoutTime = DateTime.Now;
 
-        public WorkoutServiceTests()
-        {
-            _workoutRepository = new Mock<IWorkoutRepository>();
-            _workoutService = new WorkoutService(_workoutRepository.Object);
-        }
-
-        [Fact]
-        public async void TestAddNewWorkoutAsyncSuccess()
-        {
-            // Assemble
-            var newWorkout = new Dto.Workout() 
+        public Dto.Workout GetSampleWorkout() =>
+            new Dto.Workout() 
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
@@ -52,6 +43,18 @@ namespace Ianf.Fittrack.UnitTest.Services
                     }
                 }
             };
+
+        public WorkoutServiceTests()
+        {
+            _workoutRepository = new Mock<IWorkoutRepository>();
+            _workoutService = new WorkoutService(_workoutRepository.Object);
+        }
+
+        [Fact]
+        public async void TestAddNewWorkoutAsyncSuccess()
+        {
+            // Assemble
+            var newWorkout = GetSampleWorkout();
             _workoutRepository
                 .Setup(w => w.SaveWorkoutAsync(It.IsAny<Workout>()))
                 .Returns(Task.FromResult(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())));
@@ -71,28 +74,8 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfProgramNameIsEmpty()
         {
             // Assemble
-            var newWorkout = new Dto.Workout() 
-            {
-                ProgramName = string.Empty,
-                WorkoutTime = workoutTime,
-                Exercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130,
-                                Order = 1
-                            }
-                        }
-                    }
-                }
-            };
+            var newWorkout = GetSampleWorkout();
+            newWorkout.ProgramName = string.Empty;
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
@@ -111,28 +94,11 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfExerciseOrderIsNotPositive()
         {
             // Assemble
-            var newWorkout = new Dto.Workout() 
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                Exercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 0,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130,
-                                Order = 1
-                            }
-                        }
-                    }
-                }
-            };
+            var newWorkout = GetSampleWorkout();
+            var exercise = newWorkout.Exercises.First();
+            exercise.Order = 0;
+            newWorkout.Exercises.Clear();
+            newWorkout.Exercises.Add(exercise);
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
@@ -151,28 +117,12 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetRepsIsNotPositive()
         {
             // Assemble
-            var newWorkout = new Dto.Workout() 
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                Exercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = -2,
-                                Weight = 130,
-                                Order = 1
-                            }
-                        }
-                    }
-                }
-            };
+            var newWorkout = GetSampleWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Reps = -2;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
@@ -191,28 +141,12 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetWeightIsNotValid()
         {
             // Assemble
-            var newWorkout = new Dto.Workout() 
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                Exercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130.1234M,
-                                Order = 1
-                            }
-                        }
-                    }
-                }
-            };
+            var newWorkout = GetSampleWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Weight = 130.1234M;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
@@ -231,28 +165,12 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetOrderIsNotPositive()
         {
             // Assemble
-            var newWorkout = new Dto.Workout() 
-            {
-                ProgramName = "Workout1",
-                WorkoutTime = workoutTime,
-                Exercises = new List<Dto.Exercise>()
-                {
-                    new Dto.Exercise()
-                    {
-                        ExerciseType = ExerciseType.Deadlift,
-                        Order = 1,
-                        Sets = new List<Dto.Set>()
-                        {
-                            new Dto.Set()
-                            {
-                                Reps = 5,
-                                Weight = 130,
-                                Order = -4
-                            }
-                        }
-                    }
-                }
-            };
+            var newWorkout = GetSampleWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Order = -4;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
@@ -312,6 +230,55 @@ namespace Ianf.Fittrack.UnitTest.Services
                     Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public async void TestGetNextWorkout()
+        {
+            // Assemble
+            var timestamp = DateTime.Now;
+            var newWorkout = GetSampleWorkout();
+            newWorkout.WorkoutTime = timestamp.AddDays(1);
+            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+                ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
+                DateTime.Now,
+                new List<Exercise>()
+                ));
+            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
+
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Workout>
+            {
+                workout, workoutTwo
+            }));
+
+            // Act
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now);
+
+            // Assert
+            nextWorkout.Match
+            (
+                None: () => Assert.False(true, "Expected result"),
+                Some: (s) => Assert.Equal(newWorkout, s)
+            );
+        }
+
+        [Fact]
+        public async void TestGetNextWorkoutReturnsNone()
+        {
+            // Assemble
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Workout>
+            {
+            }));
+
+            // Act
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now.AddDays(4));
+
+            // Assert
+            nextWorkout.Match
+            (
+                None: () => Assert.True(true, ""),
+                Some: (s) => Assert.False(true, $"Expected 'None' return. Got {s}.")
             );
         }
     }

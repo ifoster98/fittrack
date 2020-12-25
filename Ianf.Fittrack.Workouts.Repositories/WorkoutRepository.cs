@@ -27,8 +27,8 @@ namespace Ianf.Fittrack.Workouts.Repositories
 
         public async Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate) => 
             await _dbContext.Workouts
-                .OrderBy(s => s.WorkoutTime)
                 .Where(s => s.WorkoutTime > workoutDate)
+                .OrderBy(s => s.WorkoutTime)
                 .Select(s => s.ToDomain())
                 .ToListAsync();
     }
