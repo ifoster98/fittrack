@@ -33,9 +33,7 @@ namespace Ianf.Fittrack.Workouts.Services
 
         public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay) 
         {
-            var foo = await _workoutRepository
-                .GetNextWorkoutAsync(workoutDay);
-            return foo.Map(s => s.ToDto());
+            throw new NotImplementedException();
         }
     }
 }

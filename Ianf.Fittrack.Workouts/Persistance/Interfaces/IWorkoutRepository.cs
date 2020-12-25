@@ -10,8 +10,6 @@ namespace Ianf.Fittrack.Workouts.Persistance.Interfaces
     {
         Task<PositiveInt> SaveWorkoutAsync(Workout workout);
 
-        Task<Option<Workout>> GetNextWorkoutAsync(DateTime workoutDay);
-
         Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate);
     }
 }

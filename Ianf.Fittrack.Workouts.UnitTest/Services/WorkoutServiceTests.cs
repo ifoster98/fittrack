@@ -314,25 +314,5 @@ namespace Ianf.Fittrack.UnitTest.Services
                 Right: (newId) => Assert.False(true, "Expected error.")
             );
         }
-
-        [Fact]
-        public async void TestGetNextWorkout()
-        {
-            // Assemble
-            var programName = ProgramName.CreateProgramName("Test Program").IfNone(new ProgramName());
-            var workoutTime = DateTime.Now;
-            var plannedExercises = new List<Exercise>();
-            var g = new Workout(programName, workoutTime, plannedExercises);
-            _workoutRepository.Setup(w => w.GetNextWorkoutAsync(It.IsAny<DateTime>())).Returns(Task.FromResult(Some(g)));
-
-            // Act
-            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now);
-
-            // Assert
-            nextWorkout.Match(
-                None: () => Assert.True(false, "Should have found a workout."),
-                Some: (s) => Assert.Equal(s.ProgramName, g.ProgramName.Value)
-            );
-        }
     }
 }

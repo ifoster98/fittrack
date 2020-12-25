@@ -25,17 +25,6 @@ namespace Ianf.Fittrack.Workouts.Repositories
             return PositiveInt.CreatePositiveInt(entity.Id).IfNone(new PositiveInt());
         } 
 
-        public async Task<Option<Domain.Workout>> GetNextWorkoutAsync(DateTime workoutDay)
-        {
-            if(_dbContext.Workouts.OrderBy(s => s.WorkoutTime).Any())
-            {
-                var nextWorkout = await _dbContext.Workouts.OrderBy(s => s.WorkoutTime).FirstAsync();
-                return nextWorkout.ToDomain();
-            }
-            else 
-                return None;
-        }
-
         public async Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate) => 
             await _dbContext.Workouts
                 .OrderBy(s => s.WorkoutTime)
