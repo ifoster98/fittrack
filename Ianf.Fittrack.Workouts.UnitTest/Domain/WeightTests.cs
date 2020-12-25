@@ -11,7 +11,7 @@ namespace Ianf.Fittrack.UnitTest.Workouts.Domain
         public void TestCreateWeight()
         {
             // Assemble
-            var testValue = 2.5; 
+            var testValue = 2.5M; 
  
             // Act
             var newItem = Weight.CreateWeight(testValue);
@@ -28,7 +28,7 @@ namespace Ianf.Fittrack.UnitTest.Workouts.Domain
         public void TestCreateWeightFailNegative()
         {
             // Assemble
-            var testValue = -2.5; 
+            var testValue = -2.5M; 
  
             // Act
             var newItem = Weight.CreateWeight(testValue);
@@ -45,7 +45,7 @@ namespace Ianf.Fittrack.UnitTest.Workouts.Domain
         public void TestCreateWeightFail()
         {
             // Assemble
-            var testValue = 3.456;
+            var testValue = 3.456M;
  
             // Act
             var newItem = Weight.CreateWeight(testValue);
@@ -62,8 +62,8 @@ namespace Ianf.Fittrack.UnitTest.Workouts.Domain
         public void TestCreateWeightEqual()
         {
             // Assemble
-            var testFirstValue = 1.25;
-            var testSecondValue = 1.25;
+            var testFirstValue = 1.25M;
+            var testSecondValue = 1.25M;
  
             // Act
             var testFirstItem = Weight.CreateWeight(testFirstValue);
@@ -78,8 +78,8 @@ namespace Ianf.Fittrack.UnitTest.Workouts.Domain
         public void TestCreateWeightNotEqual()
         {
             // Assemble
-            var testFirstValue = 5;
-            var testSecondValue = 7.5;
+            var testFirstValue = 5M;
+            var testSecondValue = 7.5M;
  
             // Act
             var testFirstItem = Weight.CreateWeight(testFirstValue);

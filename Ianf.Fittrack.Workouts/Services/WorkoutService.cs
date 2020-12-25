@@ -26,7 +26,7 @@ namespace Ianf.Fittrack.Workouts.Services
         public static async Task<Either<IEnumerable<DtoValidationError>, Workout>> ValidateWorkoutToAdd(Workout workout)
         {
             var errors = new List<DtoValidationError>();
-            if (workout.PlannedExercises.Count == 0) errors.Add(new DtoValidationError("Must have planned exercises mapped in a new workout.", "Workout", "PlannedExercises"));
+            if (workout.Exercises.Count == 0) errors.Add(new DtoValidationError("Must have exercises mapped in a new workout.", "Workout", "Exercises"));
             if (errors.Any()) return errors;
             return workout;
         }

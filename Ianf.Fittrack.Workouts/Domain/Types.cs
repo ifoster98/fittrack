@@ -17,7 +17,7 @@ namespace Ianf.Fittrack.Workouts.Domain
 
     public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { };
 
-    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> PlannedExercises) { };
+    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) { };
 
     public record Error(string ErrorMessage) { };
 
@@ -94,13 +94,13 @@ namespace Ianf.Fittrack.Workouts.Domain
             var plannedExercises = new List<Exercise>();
             var actualExercises = new List<Exercise>();
 
-            if (workout.PlannedExercises == null)
+            if (workout.Exercises == null)
             {
-                errors.Add(new DtoValidationError("Planned exercises cannot be null.", "Workout", "PlannedExercises"));
+                errors.Add(new DtoValidationError(" exercises cannot be null.", "Workout", "Exercises"));
             }
             else
             {
-                workout.PlannedExercises.ForEach(e =>
+                workout.Exercises.ForEach(e =>
                 {
                     var ex = ToDomain(e);
                     ex.Match
@@ -126,7 +126,7 @@ namespace Ianf.Fittrack.Workouts.Domain
             new Dto.Workout() {
                 WorkoutTime = workout.WorkoutTime,
                 ProgramName = workout.ProgramName.Value,
-                PlannedExercises = workout.PlannedExercises.Select(p => p.ToDto()).ToList()
+                Exercises = workout.Exercises.Select(p => p.ToDto()).ToList()
             };
     }
 }

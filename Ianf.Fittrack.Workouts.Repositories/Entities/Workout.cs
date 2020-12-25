@@ -1,13 +1,21 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Ianf.Fittrack.Workouts.Repositories.Entity
+#nullable disable
+
+namespace Ianf.Fittrack.Workouts.Repositories.Entities
 {
-    public class Workout
+    public partial class Workout
     {
+        public Workout()
+        {
+            Exercises = new HashSet<Exercise>();
+        }
+
         public int Id { get; set; }
         public string ProgramName { get; set; }
         public DateTime WorkoutTime { get; set; }
-        public ICollection<Exercise> PlannedExercises { get; set; }
+
+        public virtual ICollection<Exercise> Exercises { get; set; }
     }
 }

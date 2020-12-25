@@ -141,8 +141,8 @@ Task("Docker-Remove")
 });
 
 Task("DbTests")
-.IsDependentOn("Repository-Tests")
 .IsDependentOn("Docker-Remove")
+.IsDependentOn("Repository-Tests")
 .Does(() => {
 
 });

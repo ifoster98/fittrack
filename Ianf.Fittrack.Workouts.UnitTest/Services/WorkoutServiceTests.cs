@@ -34,7 +34,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -75,7 +75,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = string.Empty,
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -115,7 +115,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -155,7 +155,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -195,7 +195,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -206,7 +206,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                             new Dto.Set()
                             {
                                 Reps = 5,
-                                Weight = 130.1234,
+                                Weight = 130.1234M,
                                 Order = 1
                             }
                         }
@@ -235,7 +235,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
                 {
                     new Dto.Exercise()
                     {
@@ -268,14 +268,14 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public async void TestAddNewWorkoutAsyncFailsIfPlannedExercisesListIsNull()
+        public async void TestAddNewWorkoutAsyncFailsIfExercisesListIsNull()
         {
             // Assemble
             var newWorkout = new Dto.Workout()
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = null
+                Exercises = null
             };
 
             // Act
@@ -285,21 +285,21 @@ namespace Ianf.Fittrack.UnitTest.Services
             result.Match(
                 Left: (err) => {
                     Assert.Equal("Workout", err.First().DtoType);
-                    Assert.Equal("PlannedExercises", err.First().DtoProperty);
+                    Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
             );
         }
 
         [Fact]
-        public async void TestAddNewWorkoutAsyncFailsIfPlannedExercisesListHasNoExercises()
+        public async void TestAddNewWorkoutAsyncFailsIfExercisesListHasNoExercises()
         {
             // Assemble
             var newWorkout = new Dto.Workout()
             {
                 ProgramName = "Workout1",
                 WorkoutTime = workoutTime,
-                PlannedExercises = new List<Dto.Exercise>()
+                Exercises = new List<Dto.Exercise>()
             };
 
             // Act
@@ -309,7 +309,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             result.Match(
                 Left: (err) => {
                     Assert.Equal("Workout", err.First().DtoType);
-                    Assert.Equal("PlannedExercises", err.First().DtoProperty);
+                    Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
             );
