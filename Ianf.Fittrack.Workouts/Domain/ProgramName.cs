@@ -1,6 +1,5 @@
 using LanguageExt;
 using System;
-using System.Collections.Generic;
 using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.Workouts.Domain

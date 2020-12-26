@@ -5,49 +5,6 @@ using LanguageExt;
 
 namespace Ianf.Fittrack.Workouts.Domain 
 {
-    public enum ExerciseType {
-        BenchPress,
-        Squat,
-        Deadlift,
-        OverheadPress,
-        BentOverRow
-    }
-
-    public record Set(PositiveInt Reps, Weight Weight, PositiveInt Order) 
-    { 
-        public Dto.Set ToDto()  =>
-            new Dto.Set() {
-                Reps = this.Reps.Value,
-                Weight = this.Weight.Value,
-                Order = this.Order.Value
-            };
-    }
-
-    public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { 
-
-        public Dto.Exercise ToDto() =>
-            new Dto.Exercise() {
-                ExerciseType = this.ExerciseType,
-                Order = this.Order.Value,
-                Sets = this.Sets.Select(s => s.ToDto()).ToList()
-            };
-    };
-
-    public record Workout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
-    { 
-        public Dto.Workout ToDto() =>
-            new Dto.Workout() {
-                Id = this.Id,
-                WorkoutTime = this.WorkoutTime,
-                ProgramName = this.ProgramName.Value,
-                Exercises = this.Exercises.Select(p => p.ToDto()).ToList()
-            };
-    }
-
-    public record Error(string ErrorMessage) { };
-
-    public record DtoValidationError(string errorMessage, string DtoType, string DtoProperty) : Error(errorMessage) { };
-
     public static class Convert
     {
         public static Either<IEnumerable<DtoValidationError>, Set> ToDomain(this Dto.Set set)
