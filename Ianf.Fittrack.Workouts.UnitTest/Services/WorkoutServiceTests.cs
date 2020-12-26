@@ -48,7 +48,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         {
             _workoutRepository = new Mock<IWorkoutRepository>();
             _logger = new Mock<ILogger>();
-            _workoutService = new WorkoutService(_logger.Object, _workoutRepository.Object);
+            _workoutService = new WorkoutService(_workoutRepository.Object);
         }
 
         [Fact]

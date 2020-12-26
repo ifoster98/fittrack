@@ -14,12 +14,10 @@ namespace Ianf.Fittrack.Workouts.Services
 {
     public class WorkoutService : IWorkoutService 
     {
-        private readonly ILogger _logger;
         private readonly IWorkoutRepository _workoutRepository;
 
-        public WorkoutService(ILogger logger, IWorkoutRepository workoutRepository) 
+        public WorkoutService(IWorkoutRepository workoutRepository) 
         {
-            _logger = logger;
             _workoutRepository = workoutRepository;
         }
 
