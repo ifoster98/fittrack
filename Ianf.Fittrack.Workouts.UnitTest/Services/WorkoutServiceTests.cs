@@ -9,7 +9,6 @@ using Moq;
 using Xunit;
 using System.Linq;
 using System.Threading.Tasks;
-using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.UnitTest.Services
 {
@@ -240,7 +239,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.Validate().IfLeft(new Fittrack.Workouts.Domain.Workout(
                 1,
                 ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
                 DateTime.Now,
@@ -290,7 +289,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.Validate().IfLeft(new Fittrack.Workouts.Domain.Workout(
                 1,
                 ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
                 DateTime.Now,
@@ -321,7 +320,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.Validate().IfLeft(new Fittrack.Workouts.Domain.Workout(
                 1,
                 ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
                 DateTime.Now,

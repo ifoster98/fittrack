@@ -2,12 +2,11 @@ using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Ianf.Fittrack.Workouts.Domain.Convert;
+using static Ianf.Fittrack.Workouts.Domain.Validator;
 using static LanguageExt.Prelude;
 
 namespace Ianf.Fittrack.Workouts.Services
@@ -21,7 +20,7 @@ namespace Ianf.Fittrack.Workouts.Services
 
         public async Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout) => 
             await workout
-                .ToDomain()
+                .Validate()
                 .BindAsync(ValidateWorkoutToAdd)
                 .MapAsync(w => _workoutRepository.SaveWorkoutAsync(w));
 
@@ -37,7 +36,6 @@ namespace Ianf.Fittrack.Workouts.Services
         {
             if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
             var workouts = await _workoutRepository.GetWorkoutsAfterDate(workoutDay);
-            Console.WriteLine(JsonConvert.SerializeObject(workouts));
             return workouts.Any()
                 ? Some(workouts
                     .OrderBy(w => w.WorkoutTime)
