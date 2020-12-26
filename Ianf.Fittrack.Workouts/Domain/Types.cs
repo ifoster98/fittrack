@@ -17,7 +17,7 @@ namespace Ianf.Fittrack.Workouts.Domain
 
     public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { };
 
-    public record Workout(ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) { };
+    public record Workout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) { };
 
     public record Error(string ErrorMessage) { };
 
@@ -119,11 +119,12 @@ namespace Ianf.Fittrack.Workouts.Domain
                 );
 
             if(errors.Any()) return errors;
-            return new Workout(programName, workout.WorkoutTime, plannedExercises);
+            return new Workout(workout.Id, programName, workout.WorkoutTime, plannedExercises);
         }
 
         public static Dto.Workout ToDto(this Workout workout) =>
             new Dto.Workout() {
+                Id = workout.Id,
                 WorkoutTime = workout.WorkoutTime,
                 ProgramName = workout.ProgramName.Value,
                 Exercises = workout.Exercises.Select(p => p.ToDto()).ToList()

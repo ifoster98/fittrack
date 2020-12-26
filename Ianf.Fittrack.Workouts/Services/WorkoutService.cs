@@ -2,6 +2,7 @@ using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,9 @@ namespace Ianf.Fittrack.Workouts.Services
 
         public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay) 
         {
+            if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
             var workouts = await _workoutRepository.GetWorkoutsAfterDate(workoutDay);
+            Console.WriteLine(JsonConvert.SerializeObject(workouts));
             return workouts.Any()
                 ? Some(workouts
                     .OrderBy(w => w.WorkoutTime)

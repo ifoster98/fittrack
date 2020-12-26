@@ -21,6 +21,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
         
         private Workout GetSampleWorkout() => 
             new Workout(
+                1,
                 ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
                 DateTime.UtcNow.AddDays(-1),
                 new List<Exercise>()

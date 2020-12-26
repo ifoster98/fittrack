@@ -241,6 +241,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+                1,
                 ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
                 DateTime.Now,
                 new List<Exercise>()
@@ -264,7 +265,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         }
 
         [Fact]
-        public async void TestGetNextWorkoutReturnsNone()
+        public async void TestGetNextWorkoutReturnsNoneIfNoWorkouts()
         {
             // Assemble
             _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Workout>
@@ -272,7 +273,69 @@ namespace Ianf.Fittrack.UnitTest.Services
             }));
 
             // Act
-            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now.AddDays(4));
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.Now);
+
+            // Assert
+            nextWorkout.Match
+            (
+                None: () => Assert.True(true, ""),
+                Some: (s) => Assert.False(true, $"Expected 'None' return. Got {s}.")
+            );
+        }
+
+        [Fact]
+        public async void TestGetNextWorkoutReturnsNoneIfDatePassedInIsMaxValue()
+        {
+            // Assemble
+            var timestamp = DateTime.Now;
+            var newWorkout = GetSampleWorkout();
+            newWorkout.WorkoutTime = timestamp.AddDays(1);
+            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+                1,
+                ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
+                DateTime.Now,
+                new List<Exercise>()
+                ));
+            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
+
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Workout>
+            {
+                workout, workoutTwo
+            }));
+
+            // Act
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.MaxValue);
+
+            // Assert
+            nextWorkout.Match
+            (
+                None: () => Assert.True(true, ""),
+                Some: (s) => Assert.False(true, $"Expected 'None' return. Got {s}.")
+            );
+        }
+
+        [Fact]
+        public async void TestGetNextWorkoutReturnsNoneIfDatePassedInIsMinValue()
+        {
+            // Assemble
+            var timestamp = DateTime.Now;
+            var newWorkout = GetSampleWorkout();
+            newWorkout.WorkoutTime = timestamp.AddDays(1);
+            var workout = newWorkout.ToDomain().IfLeft(new Fittrack.Workouts.Domain.Workout(
+                1,
+                ProgramName.CreateProgramName("test").IfNone(new ProgramName()),
+                DateTime.Now,
+                new List<Exercise>()
+                ));
+            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
+
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Workout>
+            {
+                workout, workoutTwo
+            }));
+
+            // Act
+            var nextWorkout = await _workoutService.GetNextWorkoutAsync(DateTime.MinValue);
 
             // Assert
             nextWorkout.Match

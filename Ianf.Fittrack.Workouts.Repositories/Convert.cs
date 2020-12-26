@@ -37,6 +37,7 @@ namespace Ianf.Fittrack.Workouts.Repositories
 
         public static Workout ToDomain(this Entities.Workout workout) =>
             new Workout(
+                workout.Id,
                 ProgramName.CreateProgramName(workout.ProgramName).IfNone(new ProgramName()),
                 workout.WorkoutTime,
                 workout.Exercises.Select(e => ToDomain(e)).ToList()

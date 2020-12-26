@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Ianf.Fittrack.Workouts.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Ianf.Fittrack.Workouts.Services.Interfaces;
+using Ianf.Fittrack.Workouts.Services;
+using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 
 namespace Ianf.Fittrack.Webapi
 {
@@ -26,7 +24,10 @@ namespace Ianf.Fittrack.Webapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDbContext<FittrackDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("FittrackDatabase")));
+            services.AddTransient<IWorkoutService, WorkoutService>();
+            services.AddTransient<IWorkoutRepository, WorkoutRepository>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
