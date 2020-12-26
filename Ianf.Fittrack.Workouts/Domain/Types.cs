@@ -13,11 +13,36 @@ namespace Ianf.Fittrack.Workouts.Domain
         BentOverRow
     }
 
-    public record Set(PositiveInt Reps, Weight Weight, PositiveInt Order) { };
+    public record Set(PositiveInt Reps, Weight Weight, PositiveInt Order) 
+    { 
+        public Dto.Set ToDto()  =>
+            new Dto.Set() {
+                Reps = this.Reps.Value,
+                Weight = this.Weight.Value,
+                Order = this.Order.Value
+            };
+    }
 
-    public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { };
+    public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { 
 
-    public record Workout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) { };
+        public Dto.Exercise ToDto() =>
+            new Dto.Exercise() {
+                ExerciseType = this.ExerciseType,
+                Order = this.Order.Value,
+                Sets = this.Sets.Select(s => s.ToDto()).ToList()
+            };
+    };
+
+    public record Workout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
+    { 
+        public Dto.Workout ToDto() =>
+            new Dto.Workout() {
+                Id = this.Id,
+                WorkoutTime = this.WorkoutTime,
+                ProgramName = this.ProgramName.Value,
+                Exercises = this.Exercises.Select(p => p.ToDto()).ToList()
+            };
+    }
 
     public record Error(string ErrorMessage) { };
 
@@ -50,13 +75,6 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Set(reps, weight, order);
         }
 
-        public static Dto.Set ToDto(this Set set)  =>
-            new Dto.Set() {
-                Reps = set.Reps.Value,
-                Weight = set.Weight.Value,
-                Order = set.Order.Value
-            };
-
         public static Either<IEnumerable<DtoValidationError>, Exercise> ToDomain(this Dto.Exercise exercise)
         {
             var errors = new List<DtoValidationError>();
@@ -80,13 +98,6 @@ namespace Ianf.Fittrack.Workouts.Domain
             if(errors.Any()) return errors;
             return new Exercise(exercise.ExerciseType, sets, order);
         }
-
-        public static Dto.Exercise ToDto(this Exercise exercise) =>
-            new Dto.Exercise() {
-                ExerciseType = exercise.ExerciseType,
-                Order = exercise.Order.Value,
-                Sets = exercise.Sets.Select(s => s.ToDto()).ToList()
-            };
 
         public static Either<IEnumerable<DtoValidationError>, Workout> ToDomain(this Dto.Workout workout)
         {
@@ -121,13 +132,5 @@ namespace Ianf.Fittrack.Workouts.Domain
             if(errors.Any()) return errors;
             return new Workout(workout.Id, programName, workout.WorkoutTime, plannedExercises);
         }
-
-        public static Dto.Workout ToDto(this Workout workout) =>
-            new Dto.Workout() {
-                Id = workout.Id,
-                WorkoutTime = workout.WorkoutTime,
-                ProgramName = workout.ProgramName.Value,
-                Exercises = workout.Exercises.Select(p => p.ToDto()).ToList()
-            };
     }
 }
