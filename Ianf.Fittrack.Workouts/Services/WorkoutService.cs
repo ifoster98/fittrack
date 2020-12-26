@@ -2,6 +2,7 @@ using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,14 @@ namespace Ianf.Fittrack.Workouts.Services
 {
     public class WorkoutService : IWorkoutService 
     {
+        private readonly ILogger _logger;
         private readonly IWorkoutRepository _workoutRepository;
 
-        public WorkoutService(IWorkoutRepository workoutRepository) =>
+        public WorkoutService(ILogger logger, IWorkoutRepository workoutRepository) 
+        {
+            _logger = logger;
             _workoutRepository = workoutRepository;
+        }
 
         public async Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout) => 
             await workout

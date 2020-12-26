@@ -9,14 +9,15 @@ using Moq;
 using Xunit;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Ianf.Fittrack.UnitTest.Services
 {
     public class WorkoutServiceTests
     {
         private readonly Mock<IWorkoutRepository> _workoutRepository;
+        private readonly Mock<ILogger> _logger;
         private readonly IWorkoutService _workoutService;
-
         private DateTime workoutTime = DateTime.Now;
 
         public Dto.Workout GetSampleWorkout() =>
@@ -46,7 +47,8 @@ namespace Ianf.Fittrack.UnitTest.Services
         public WorkoutServiceTests()
         {
             _workoutRepository = new Mock<IWorkoutRepository>();
-            _workoutService = new WorkoutService(_workoutRepository.Object);
+            _logger = new Mock<ILogger>();
+            _workoutService = new WorkoutService(_logger.Object, _workoutRepository.Object);
         }
 
         [Fact]
