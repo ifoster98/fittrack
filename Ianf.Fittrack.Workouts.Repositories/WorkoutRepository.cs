@@ -4,8 +4,6 @@ using System;
 using System.Linq;
 using LanguageExt;
 using System.Threading.Tasks;
-using static Ianf.Fittrack.Workouts.Repositories.Convert;
-using static LanguageExt.Prelude;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -25,8 +23,10 @@ namespace Ianf.Fittrack.Workouts.Repositories
             return PositiveInt.CreatePositiveInt(entity.Id).IfNone(new PositiveInt());
         } 
 
-        public async Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate) => 
+        public async Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate) =>
             await _dbContext.Workouts
+                .Include(w => w.Exercises)
+                    .ThenInclude(e => e.Sets)
                 .Where(s => s.WorkoutTime > workoutDate)
                 .OrderBy(s => s.WorkoutTime)
                 .Select(s => s.ToDomain())

@@ -56,6 +56,10 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
                 // Assert
                 var workoutCount = await context.Workouts.CountAsync();
                 Assert.Equal(1, workoutCount);
+                var result = await context.Workouts.FirstAsync();
+                Assert.NotNull(result);
+                Assert.Equal(1, result.Exercises.Count());
+                Assert.Equal(1, result.Exercises.First().Sets.Count());
             }
         }
 

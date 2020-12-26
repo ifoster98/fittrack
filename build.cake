@@ -10,6 +10,7 @@ var solution = Argument("solution", "./fittrack.sln");
 var dockerDirectory = Argument("dockerDirectory", "./Ianf.Fittrack.Workouts.DB/Docker");
 var homeDirectory = Argument("homeDirectory", "/Users/ianfoster/dev/fittrack/");
 var sqlDocker = Argument("sqlDocker", "sql1");
+var artifactDirectory = Argument("artifactDirectory", "./artifacts/");
 
 ///////////////////////////////////////////////////////////////////////////////
 // BUILD TASKS
@@ -17,6 +18,7 @@ var sqlDocker = Argument("sqlDocker", "sql1");
 
 Task("Clean")
 .Does(() => {
+   CleanDirectory(artifactDirectory);
    DotNetCoreClean(solution);
 });
 
@@ -38,6 +40,16 @@ Task("Test")
        NoBuild = true,
        Filter = "FullyQualifiedName!~WorkoutRepositoryTests"
     });
+});
+
+Task("Publish")
+.IsDependentOn("Test")
+.Does(() => {
+   DotNetCorePublish(solution, new DotNetCorePublishSettings
+   {
+      Configuration = configuration,
+      OutputDirectory = $"{artifactDirectory}/webapp/"
+   });
 });
 
 ///////////////////////////////////////////////////////////////////////////////
