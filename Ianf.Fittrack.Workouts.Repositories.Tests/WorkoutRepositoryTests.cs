@@ -4,6 +4,7 @@ using Ianf.Fittrack.Workouts.Domain;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using System.Linq;
+using Ianf.Fittrack.Workouts.Dto;
 
 namespace Ianf.Fittrack.Workouts.Repositories.Tests
 {
@@ -19,18 +20,18 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
 
         protected DbContextOptions<FittrackDbContext> ContextOptions { get; }
         
-        private Workout GetSampleWorkout() => 
-            new Workout(
+        private Domain.Workout GetSampleWorkout() => 
+            new Domain.Workout(
                 1,
                 ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
                 DateTime.UtcNow.AddDays(-1),
-                new List<Exercise>()
+                new List<Domain.Exercise>()
                 {
-                    new Exercise(
+                    new Domain.Exercise(
                         ExerciseType.Deadlift,
-                        new List<Set>()
+                        new List<Domain.Set>()
                         {
-                            new Set(
+                            new Domain.Set(
                                 PositiveInt.CreatePositiveInt(5).IfNone(new PositiveInt()),
                                 Weight.CreateWeight(130.0M).IfNone(new Weight()),
                                 PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt()) 

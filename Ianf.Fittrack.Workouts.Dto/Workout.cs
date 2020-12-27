@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Ianf.Fittrack.Dto
+namespace Ianf.Fittrack.Workouts.Dto
 {
     public struct Workout 
     {

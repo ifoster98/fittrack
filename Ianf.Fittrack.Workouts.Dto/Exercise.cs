@@ -1,8 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
-using Ianf.Fittrack.Workouts.Domain;
 
-namespace Ianf.Fittrack.Dto
+namespace Ianf.Fittrack.Workouts.Dto
 {
     public struct Exercise 
     {

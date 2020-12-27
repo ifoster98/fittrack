@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using LanguageExt;
-
-namespace Ianf.Fittrack.Workouts.Domain 
+namespace Ianf.Fittrack.Workouts.Dto
 {
     public enum ExerciseType {
         BenchPress,

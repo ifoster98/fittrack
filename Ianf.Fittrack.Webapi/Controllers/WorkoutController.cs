@@ -1,7 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Ianf.Fittrack.Dto;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +23,7 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<int>> AddNewWorkoutAsync(Workout workout)
+        public async Task<ActionResult<int>> AddNewWorkoutAsync(Workouts.Dto.Workout workout)
         {
             var result = await _workoutService.AddNewWorkoutAsync(workout);
             ActionResult<int> returnValue = Ok();

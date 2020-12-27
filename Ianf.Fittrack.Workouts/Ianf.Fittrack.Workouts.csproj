@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ianf.Fittrack.Workouts.Dto\Ianf.Fittrack.Workouts.Dto.csproj" />
+  </ItemGroup>
+
 </Project>

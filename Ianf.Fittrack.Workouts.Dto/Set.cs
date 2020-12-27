@@ -1,4 +1,4 @@
-namespace Ianf.Fittrack.Dto
+namespace Ianf.Fittrack.Workouts.Dto
 {
     public struct Set
     {

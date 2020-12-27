@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection.Metadata;
 using Ianf.Fittrack.Workouts.Domain;
+using Ianf.Fittrack.Workouts.Dto;
 
 namespace Ianf.Fittrack.Workouts.Repositories
 {
@@ -21,8 +22,8 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 Order = set.Order.Value
             };
 
-        public static Exercise ToDomain(this Entities.Exercise exercise) =>
-            new Exercise(
+        public static Domain.Exercise ToDomain(this Entities.Exercise exercise) =>
+            new Domain.Exercise(
                 (ExerciseType)exercise.ExerciseType,
                 exercise.Sets.Select(s => ToDomain(s)).ToList(),
                 PositiveInt.CreatePositiveInt(exercise.Order).IfNone(new PositiveInt())
@@ -35,8 +36,8 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 Sets = exercise.Sets.Select(s => s.ToEntity()).ToList()
             };
 
-        public static Workout ToDomain(this Entities.Workout workout) =>
-            new Workout(
+        public static Domain.Workout ToDomain(this Entities.Workout workout) =>
+            new Domain.Workout(
                 workout.Id,
                 ProgramName.CreateProgramName(workout.ProgramName).IfNone(new ProgramName()),
                 workout.WorkoutTime,
