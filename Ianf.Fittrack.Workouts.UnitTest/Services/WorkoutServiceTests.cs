@@ -262,7 +262,11 @@ namespace Ianf.Fittrack.UnitTest.Services
             nextWorkout.Match
             (
                 None: () => Assert.False(true, "Expected result"),
-                Some: (s) => Assert.Equal(newWorkout, s)
+                Some: (s) => {
+                    Assert.Equal(newWorkout.ProgramName, s.ProgramName);
+                    Assert.Equal(newWorkout.WorkoutTime, s.WorkoutTime);
+                    Assert.Equal(newWorkout.Exercises.Count(), s.Exercises.Count());
+                }
             );
         }
 

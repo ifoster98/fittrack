@@ -11,18 +11,5 @@ namespace Ianf.Fittrack.Workouts.Dto
         public DateTime WorkoutTime { get; set; }
         public List<Exercise> Exercises { get; set; }
 
-        public override bool Equals(object? obj)
-        {
-            if(obj is null) return false;
-            var item = (Workout)obj;
-            return item.ProgramName == ProgramName 
-                && item.WorkoutTime == WorkoutTime
-                && item.Exercises.SequenceEqual(Exercises);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

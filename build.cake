@@ -47,11 +47,10 @@ Task("Build")
 Task("Test")
 .IsDependentOn("Build")
 .Does(() => {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings
+    DotNetCoreTest("Ianf.Fittrack.Workouts.UnitTest/Ianf.Fittrack.Workouts.UnitTest.csproj", new DotNetCoreTestSettings
     {
        Configuration = configuration,
-       NoBuild = true,
-       Filter = "FullyQualifiedName!~WorkoutRepositoryTests"
+       NoBuild = true
     });
 });
 
@@ -136,21 +135,6 @@ Task("Run-DbUp")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// TEST REPOSITORY CODE
-///////////////////////////////////////////////////////////////////////////////
-
-Task("Repository-Tests")
-.IsDependentOn("Run-DbUp")
-.Does(() => {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings
-    {
-       Configuration = configuration,
-       NoBuild = true,
-       Filter = "FullyQualifiedName~WorkoutRepositoryTests"
-    });
-});
-
-///////////////////////////////////////////////////////////////////////////////
 // TEAR DOWN INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -168,4 +152,33 @@ Task("Rebuild")
 .Does(() => {
 
 });
+
+///////////////////////////////////////////////////////////////////////////////
+// TEST REPOSITORY CODE
+///////////////////////////////////////////////////////////////////////////////
+
+Task("Repository-Tests")
+.IsDependentOn("Rebuild")
+.Does(() => {
+    DotNetCoreTest("Ianf.Fittrack.Workouts.Repositories.Tests/Ianf.Fittrack.Workouts.Repositories.Tests.csproj", new DotNetCoreTestSettings
+    {
+       Configuration = configuration,
+       NoBuild = true
+    });
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// TEST API LEVEL
+///////////////////////////////////////////////////////////////////////////////
+
+Task("API-Tests")
+.IsDependentOn("Rebuild")
+.Does(() => {
+    DotNetCoreTest("Ianf.Fittrack.Webapi.Tests/Ianf.Fittrack.Webapi.Tests.csproj", new DotNetCoreTestSettings
+    {
+       Configuration = configuration,
+       NoBuild = true
+    });
+});
+
 RunTarget(target);
