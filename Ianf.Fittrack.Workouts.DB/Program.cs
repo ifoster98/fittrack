@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using DbUp;
-using DbUp.Engine;
-using DbUp.Helpers;
-using DbUp.Support;
 using System.Reflection;
 
 namespace Ianf.Fittrack.Workouts.DB

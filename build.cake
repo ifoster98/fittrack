@@ -7,6 +7,7 @@ using System.Threading;
 var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
 var solution = Argument("solution", "./fittrack.sln");
+var dbSolution = Argument("dbSolution", "./fittrackdb.sln");
 var dockerDirectory = Argument("dockerDirectory", "./Ianf.Fittrack.Workouts.DB/Docker");
 var homeDirectory = Argument("homeDirectory", "/Users/ianfoster/dev/fittrack/");
 var sqlDocker = Argument("sqlDocker", "sql1");
@@ -20,12 +21,17 @@ Task("Clean")
 .Does(() => {
    CleanDirectory(artifactDirectory);
    DotNetCoreClean(solution);
+   DotNetCoreClean(dbSolution);
 });
 
 Task("Build")
 .IsDependentOn("Clean")
 .Does(() => {
    DotNetCoreBuild(solution, new DotNetCoreBuildSettings
+   {
+      Configuration = configuration,
+   });
+   DotNetCoreBuild(dbSolution, new DotNetCoreBuildSettings
    {
       Configuration = configuration,
    });
@@ -50,11 +56,17 @@ Task("Publish")
       Configuration = configuration,
       OutputDirectory = $"{artifactDirectory}/webapp/"
    });
+   DotNetCorePublish(dbSolution, new DotNetCorePublishSettings
+   {
+      Configuration = configuration,
+      OutputDirectory = $"{artifactDirectory}/db/"
+   });
 });
 
 ///////////////////////////////////////////////////////////////////////////////
 // RUN WEB SERVER
 ///////////////////////////////////////////////////////////////////////////////
+
 Task("Run-WebServer")
 .IsDependentOn("Test")
 .Does(() => {
@@ -62,11 +74,11 @@ Task("Run-WebServer")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// TEST DB TASKS
+// SET UP DB SERVER
 ///////////////////////////////////////////////////////////////////////////////
 
-// Start docker container running sql server
 Task("Docker-Build")
+.IsDependentOn("Publish")
 .Does(() => {
    StartProcess("docker", new ProcessSettings {
       Arguments = new ProcessArgumentBuilder()
@@ -122,10 +134,14 @@ Task("Run-DbUp")
 .Does(() => {
    StartProcess("dotnet", new ProcessSettings {
       Arguments = new ProcessArgumentBuilder()
-         .Append("run --project ./Ianf.Fittrack.Workouts.DB/Ianf.Fittrack.Workouts.DB.csproj")
+         .Append($"{artifactDirectory}/db/Ianf.Fittrack.Workouts.DB.dll")
       }
    );
 });
+
+///////////////////////////////////////////////////////////////////////////////
+// TEST REPOSITORY CODE
+///////////////////////////////////////////////////////////////////////////////
 
 Task("Repository-Tests")
 .IsDependentOn("Run-DbUp")
@@ -137,6 +153,10 @@ Task("Repository-Tests")
        Filter = "FullyQualifiedName~WorkoutRepositoryTests"
     });
 });
+
+///////////////////////////////////////////////////////////////////////////////
+// TEAR DOWN DATABASE
+///////////////////////////////////////////////////////////////////////////////
 
 Task("Docker-Stop")
 .Does(() => {
