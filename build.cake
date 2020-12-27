@@ -11,6 +11,7 @@ var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
 var solution = Argument("solution", "./fittrack.sln");
 var dbSolution = Argument("dbSolution", "./fittrackdb.sln");
+var testSolution = Argument("testSolution", "./fittrackapitest.sln");
 var artifactDirectory = Argument("artifactDirectory", "./artifacts/");
 
 var server = Argument("server", "db");
@@ -29,6 +30,7 @@ Task("Clean")
    CleanDirectory(artifactDirectory);
    DotNetCoreClean(solution);
    DotNetCoreClean(dbSolution);
+   DotNetCoreClean(testSolution);
 });
 
 Task("Build")
@@ -39,6 +41,10 @@ Task("Build")
       Configuration = configuration,
    });
    DotNetCoreBuild(dbSolution, new DotNetCoreBuildSettings
+   {
+      Configuration = configuration,
+   });
+   DotNetCoreBuild(testSolution, new DotNetCoreBuildSettings
    {
       Configuration = configuration,
    });
