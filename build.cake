@@ -146,7 +146,7 @@ Task("Run-DbUp")
 
 Task("DC-Down")
 .Does(() => {
-   if(!FileExists(artifactDirectory))
+   if(FileExists(artifactDirectory))
       DockerComposeDown();
 });
 
