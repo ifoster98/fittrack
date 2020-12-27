@@ -11,5 +11,7 @@ namespace Ianf.Fittrack.Workouts.Persistance.Interfaces
         Task<PositiveInt> SaveWorkoutAsync(Workout workout);
 
         Task<List<Workout>> GetWorkoutsAfterDate(DateTime workoutDate);
+
+        Task<bool> HasWorkout(DateTime workoutDate, ProgramName programName);
     }
 }

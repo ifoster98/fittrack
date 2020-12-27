@@ -23,22 +23,25 @@ namespace Ianf.Fittrack.Workouts.Services
 
         public async Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout) => 
             await workout
-                .Validate()
+                .ValidateDto()
                 .BindAsync(ValidateWorkoutToAdd)
                 .MapAsync(w => _workoutRepository.SaveWorkoutAsync(w));
 
-        public static async Task<Either<IEnumerable<DtoValidationError>, Workout>> ValidateWorkoutToAdd(Workout workout)
+        public async Task<Either<IEnumerable<DtoValidationError>, Workout>> ValidateWorkoutToAdd(Workout workout)
         {
             var errors = new List<DtoValidationError>();
             if (workout.Exercises.Count == 0) errors.Add(new DtoValidationError("Must have exercises mapped in a new workout.", "Workout", "Exercises"));
+            var foo = await _workoutRepository.HasWorkout(workout.WorkoutTime, workout.ProgramName);
+            if(foo) errors.Add(new DtoValidationError("Duplicate workout definition.", "Workout", ""));
             if (errors.Any()) return errors;
             return workout;
         }
 
-        public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay) 
+        public async Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay, string programName) 
         {
             if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
             var workouts = await _workoutRepository.GetWorkoutsAfterDate(workoutDay);
+            workouts = workouts.Where(w => w.ProgramName.Value.Equals(programName)).ToList();
             return workouts.Any()
                 ? Some(workouts
                     .OrderBy(w => w.WorkoutTime)

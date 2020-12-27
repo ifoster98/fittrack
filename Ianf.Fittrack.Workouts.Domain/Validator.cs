@@ -6,7 +6,7 @@ namespace Ianf.Fittrack.Workouts.Domain
 {
     public static class Validator
     {
-        public static Either<IEnumerable<DtoValidationError>, Set> Validate(this Dto.Set set)
+        public static Either<IEnumerable<DtoValidationError>, Set> ValidateDto(this Dto.Set set)
         {
             var errors = new List<DtoValidationError>();
             var reps = new PositiveInt();
@@ -31,13 +31,13 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Set(reps, weight, order);
         }
 
-        public static Either<IEnumerable<DtoValidationError>, Exercise> Validate(this Dto.Exercise exercise)
+        public static Either<IEnumerable<DtoValidationError>, Exercise> ValidateDto(this Dto.Exercise exercise)
         {
             var errors = new List<DtoValidationError>();
             var sets = new List<Set>();
 
             exercise.Sets.ForEach(s => {
-                var e = Validate(s);
+                var e = ValidateDto(s);
                 e.Match
                 (
                     Left: (err) => errors.AddRange(err),
@@ -55,7 +55,7 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Exercise(exercise.ExerciseType, sets, order);
         }
 
-        public static Either<IEnumerable<DtoValidationError>, Workout> Validate(this Dto.Workout workout)
+        public static Either<IEnumerable<DtoValidationError>, Workout> ValidateDto(this Dto.Workout workout)
         {
             var errors = new List<DtoValidationError>();
             var plannedExercises = new List<Exercise>();
@@ -69,7 +69,7 @@ namespace Ianf.Fittrack.Workouts.Domain
             {
                 workout.Exercises.ForEach(e =>
                 {
-                    var ex = Validate(e);
+                    var ex = ValidateDto(e);
                     ex.Match
                     (
                         Left: (err) => errors.AddRange(err),

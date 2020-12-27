@@ -5,5 +5,5 @@ using LanguageExt;
 
 namespace Ianf.Fittrack.Workouts.Domain 
 {
-    public record DtoValidationError(string errorMessage, string DtoType, string DtoProperty) : Error(errorMessage) { };
+    public record DtoValidationError(string ErrorMessage, string DtoType, string DtoProperty) : Error(ErrorMessage) { };
 }

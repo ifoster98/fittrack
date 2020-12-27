@@ -31,5 +31,11 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 .OrderBy(s => s.WorkoutTime)
                 .Select(s => s.ToDomain())
                 .ToListAsync();
+
+        public async Task<bool> HasWorkout(DateTime workoutDate, ProgramName programName) =>
+            await _dbContext.Workouts
+                .Where(w => w.WorkoutTime.Date == workoutDate.Date 
+                    && w.ProgramName == programName.Value)
+                .AnyAsync();
     }
 }
