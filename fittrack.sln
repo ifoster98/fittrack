@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ianf.Fittrack.Workouts.Repo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ianf.Fittrack.Workouts.Repositories.Tests", "Ianf.Fittrack.Workouts.Repositories.Tests\Ianf.Fittrack.Workouts.Repositories.Tests.csproj", "{40D74D9E-CFD3-400D-965F-F0FC62C581CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ianf.Fittrack.Webapi.Tests", "Ianf.Fittrack.Webapi.Tests\Ianf.Fittrack.Webapi.Tests.csproj", "{575DF443-8CFA-419A-BF92-BC593D6A6FB5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

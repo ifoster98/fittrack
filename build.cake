@@ -1,4 +1,7 @@
-#addin nuget:?package=Cake.Docker&version=0.10.0
+#addin nuget:?package=Cake.Docker&version=0.11.1
+#addin nuget:?package=Cake.Json&version=5.2.0
+#addin nuget:?package=Newtonsoft.Json&version=11.0.2
+using System.Runtime.CompilerServices;
 using System.Threading;
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -61,54 +64,43 @@ Task("Publish")
       Configuration = configuration,
       OutputDirectory = $"{artifactDirectory}/db/"
    });
+   CopyFile("Ianf.Fittrack.Webapi/Docker/Dockerfile", $"{artifactDirectory}/Dockerfile");
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// RUN WEB SERVER
+// SET UP LOCAL CONFIGURATION
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("Run-WebServer")
-.IsDependentOn("Test")
+Task("Local-Configuration")
+.IsDependentOn("Publish")
 .Does(() => {
-   DotNetCoreRun("Ianf.Fittrack.Webapi/Ianf.Fittrack.Webapi.csproj");
+  var configFile = $"{artifactDirectory}/webapp/appsettings.json";
+  dynamic config = ParseJsonFromFile(configFile);
+  config.ConnectionStrings.FittrackDatabase = "Server=db; Database=Fittrack; User Id=SA; Password=31Freeble$";
+  SerializeJsonToPrettyFile<JObject>(configFile, config);
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// SET UP INFRASTRUCTURE
+///////////////////////////////////////////////////////////////////////////////
+
+Task("DC-Up")
+.IsDependentOn("Local-Configuration")
+.Does(() => {
+   DockerComposeUp(new DockerComposeUpSettings
+   {
+      ForceRecreate=true,
+      DetachedMode=true,
+      Build=true
+   }); 
 });
 
 ///////////////////////////////////////////////////////////////////////////////
 // SET UP DB SERVER
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("Docker-Build")
-.IsDependentOn("Publish")
-.Does(() => {
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("build")
-         .Append("-t")
-         .Append(sqlDocker)
-         .Append(dockerDirectory)
-      }
-   );
-});
-
-Task("Docker-Run")
-.IsDependentOn("Docker-Build")
-.Does(() => {
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("run")
-         .Append("-e \"ACCEPT_EULA=Y\"")
-         .Append("-e \"SA_PASSWORD=31Freeble$\"")
-         .Append("-p 1433:1433")
-         .Append($"--name {sqlDocker}")
-         .Append($"-h {sqlDocker}")
-         .Append("-d")
-         .Append("mcr.microsoft.com/mssql/server:2019-latest")
-      }
-   );
-});
-
 Task("Create-Schema")
-.IsDependentOn("Docker-Run")
+.IsDependentOn("DC-Up")
 .Does(() => {
    Thread.Sleep(2000);
    StartProcess("docker", new ProcessSettings {
@@ -155,37 +147,13 @@ Task("Repository-Tests")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// TEAR DOWN DATABASE
+// TEAR DOWN INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("Docker-Stop")
+Task("DC-Down")
+.IsDependentOn("DC-Up")
 .Does(() => {
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("container")
-         .Append("stop")
-         .Append(sqlDocker)
-      }
-   );
-});
-
-Task("Docker-Remove")
-.IsDependentOn("Docker-Stop")
-.Does(() => {
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("container")
-         .Append("rm")
-         .Append(sqlDocker)
-      }
-   );
-});
-
-Task("DbTests")
-.IsDependentOn("Docker-Remove")
-.IsDependentOn("Repository-Tests")
-.Does(() => {
-
+   DockerComposeDown();
 });
 
 RunTarget(target);

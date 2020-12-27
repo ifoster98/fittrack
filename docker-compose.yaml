@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  webserver: 
+    build: "./artifacts/"
+    container_name: web1
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on: 
+      - db
+    links:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql1
+    environment:
+      - SA_PASSWORD=31Freeble$$
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Standard
+    ports:
+      - "1433:1433"
