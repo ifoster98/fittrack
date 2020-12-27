@@ -5,6 +5,8 @@ services:
     build: "./artifacts/"
     container_name: web1
     restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80:80"
       - "443:443"

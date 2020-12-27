@@ -11,10 +11,12 @@ var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
 var solution = Argument("solution", "./fittrack.sln");
 var dbSolution = Argument("dbSolution", "./fittrackdb.sln");
-var dockerDirectory = Argument("dockerDirectory", "./Ianf.Fittrack.Workouts.DB/Docker");
-var homeDirectory = Argument("homeDirectory", "/Users/ianfoster/dev/fittrack/");
-var sqlDocker = Argument("sqlDocker", "sql1");
 var artifactDirectory = Argument("artifactDirectory", "./artifacts/");
+
+var server = Argument("server", "db");
+var database = Argument("database", "Fittrack");
+var dbUser = Argument("dbUser", "SA");
+var dbPassword = Argument("dbPassword", "31Freeble$");
 
 ///////////////////////////////////////////////////////////////////////////////
 // BUILD TASKS
@@ -76,7 +78,7 @@ Task("Local-Configuration")
 .Does(() => {
   var configFile = $"{artifactDirectory}/webapp/appsettings.json";
   dynamic config = ParseJsonFromFile(configFile);
-  config.ConnectionStrings.FittrackDatabase = "Server=db; Database=Fittrack; User Id=SA; Password=31Freeble$";
+  config.ConnectionStrings.FittrackDatabase = $"Server=db; Database=Fittrack; User Id=SA; Password=31Freeble$";
   SerializeJsonToPrettyFile<JObject>(configFile, config);
 });
 
