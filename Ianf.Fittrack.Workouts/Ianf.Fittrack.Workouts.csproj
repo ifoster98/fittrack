@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ianf.Fittrack.Workouts.Dto\Ianf.Fittrack.Workouts.Dto.csproj" />
+    <ProjectReference Include="..\Ianf.Fittrack.Workouts.Domain\Ianf.Fittrack.Workouts.Domain.csproj" />
   </ItemGroup>
 
 </Project>

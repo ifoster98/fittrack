@@ -18,6 +18,8 @@ var database = Argument("database", "Fittrack");
 var dbUser = Argument("dbUser", "SA");
 var dbPassword = Argument("dbPassword", "31Freeble$");
 
+var dbConnectionString = $"Server={server}; Database={database}; User Id=SA; Password=31Freeble$";
+
 ///////////////////////////////////////////////////////////////////////////////
 // BUILD TASKS
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,7 +80,7 @@ Task("Local-Configuration")
 .Does(() => {
   var configFile = $"{artifactDirectory}/webapp/appsettings.json";
   dynamic config = ParseJsonFromFile(configFile);
-  config.ConnectionStrings.FittrackDatabase = $"Server=db; Database=Fittrack; User Id=SA; Password=31Freeble$";
+  config.ConnectionStrings.FittrackDatabase = dbConnectionString;
   SerializeJsonToPrettyFile<JObject>(configFile, config);
 });
 
@@ -153,9 +155,17 @@ Task("Repository-Tests")
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("DC-Down")
-.IsDependentOn("DC-Up")
 .Does(() => {
    DockerComposeDown();
 });
 
+///////////////////////////////////////////////////////////////////////////////
+// REBUILD ENVIRONMENT
+///////////////////////////////////////////////////////////////////////////////
+Task("Rebuild")
+.IsDependentOn("DC-Down")
+.IsDependentOn("Run-DbUp")
+.Does(() => {
+
+});
 RunTarget(target);
