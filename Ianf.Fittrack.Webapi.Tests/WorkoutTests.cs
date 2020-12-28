@@ -17,7 +17,7 @@ namespace Ianf.Fittrack.Webapi.Tests
         public async System.Threading.Tasks.Task TestAddNewWorkoutAsync()
         {
             // Assemble
-            var newWorkout = new Fittrack.Workouts.Dto.Workout() 
+            var newWorkout = new Fittrack.Workouts.Dto.PlannedWorkout() 
             {
                 ProgramName = "Workout1",
                 WorkoutTime = _currentTime,

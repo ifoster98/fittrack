@@ -22,8 +22,8 @@ namespace Ianf.Fittrack.UnitTest.Services
         private DateTime workoutTime = DateTime.Now;
         private readonly string programName = "Workout1";
 
-        public Fittrack.Workouts.Dto.Workout GetSampleWorkout() =>
-            new Fittrack.Workouts.Dto.Workout() 
+        public Fittrack.Workouts.Dto.PlannedWorkout GetSamplePlannedWorkout() =>
+            new Fittrack.Workouts.Dto.PlannedWorkout() 
             {
                 ProgramName = programName,
                 WorkoutTime = workoutTime,
@@ -57,7 +57,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncSuccess()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             _workoutRepository
                 .Setup(w => w.SaveWorkoutAsync(It.IsAny<Fittrack.Workouts.Domain.PlannedWorkout>()))
                 .Returns(Task.FromResult(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())));
@@ -77,7 +77,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfProgramNameIsEmpty()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             newWorkout.ProgramName = string.Empty;
 
             // Act
@@ -86,7 +86,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedWorkout", err.First().DtoType);
                     Assert.Equal("ProgramName", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
@@ -97,7 +97,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfProgramNameAndDateIsDuplicate()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             _workoutRepository.Setup(w => w.HasWorkout(It.IsAny<DateTime>(), It.IsAny<ProgramName>())).Returns(Task.FromResult(true));
 
             // Act
@@ -107,7 +107,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             result.Match(
                 Left: (err) => {
                     Assert.Equal("Duplicate workout definition.", err.First().ErrorMessage);
-                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedWorkout", err.First().DtoType);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
             );
@@ -117,7 +117,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfExerciseOrderIsNotPositive()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
             exercise.Order = 0;
             newWorkout.Exercises.Clear();
@@ -140,7 +140,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetRepsIsNotPositive()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
             var set = exercise.Sets.First();
             set.Reps = -2;
@@ -164,7 +164,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetWeightIsNotValid()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
             var set = exercise.Sets.First();
             set.Weight = 130.1234M;
@@ -188,7 +188,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfSetOrderIsNotPositive()
         {
             // Assemble
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
             var set = exercise.Sets.First();
             set.Order = -4;
@@ -212,7 +212,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfExercisesListIsNull()
         {
             // Assemble
-            var newWorkout = new Fittrack.Workouts.Dto.Workout()
+            var newWorkout = new Fittrack.Workouts.Dto.PlannedWorkout()
             {
                 ProgramName = programName,
                 WorkoutTime = workoutTime,
@@ -225,7 +225,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedWorkout", err.First().DtoType);
                     Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
@@ -236,7 +236,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestAddNewWorkoutAsyncFailsIfExercisesListHasNoExercises()
         {
             // Assemble
-            var newWorkout = new Fittrack.Workouts.Dto.Workout()
+            var newWorkout = new Fittrack.Workouts.Dto.PlannedWorkout()
             {
                 ProgramName = programName,
                 WorkoutTime = workoutTime,
@@ -249,7 +249,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("Workout", err.First().DtoType);
+                    Assert.Equal("PlannedWorkout", err.First().DtoType);
                     Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
@@ -261,7 +261,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         {
             // Assemble
             var timestamp = DateTime.Now;
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
@@ -315,7 +315,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         {
             // Assemble
             var timestamp = DateTime.Now;
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
@@ -346,7 +346,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         {
             // Assemble
             var timestamp = DateTime.Now;
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
@@ -377,7 +377,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         {
             // Assemble
             var timestamp = DateTime.Now;
-            var newWorkout = GetSampleWorkout();
+            var newWorkout = GetSamplePlannedWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,

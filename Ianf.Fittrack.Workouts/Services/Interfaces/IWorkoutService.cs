@@ -8,8 +8,8 @@ namespace Ianf.Fittrack.Workouts.Services.Interfaces
 {
     public interface IWorkoutService
     {
-        Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.Workout workout);
+        Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.PlannedWorkout workout);
 
-        Task<Option<Dto.Workout>> GetNextWorkoutAsync(DateTime workoutDay, string programName);
+        Task<Option<Dto.PlannedWorkout>> GetNextWorkoutAsync(DateTime workoutDay, string programName);
     }
 }

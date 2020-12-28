@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
@@ -55,15 +56,14 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Exercise(exercise.ExerciseType, sets, order);
         }
 
-        public static Either<IEnumerable<DtoValidationError>, PlannedWorkout> ValidateDto(this Dto.Workout workout)
+        public static Either<IEnumerable<DtoValidationError>, PlannedWorkout> ValidateDto(this Dto.PlannedWorkout workout)
         {
             var errors = new List<DtoValidationError>();
-            var plannedExercises = new List<Exercise>();
-            var actualExercises = new List<Exercise>();
+            var exercises = new List<Exercise>();
 
             if (workout.Exercises == null)
             {
-                errors.Add(new DtoValidationError(" exercises cannot be null.", "Workout", "Exercises"));
+                errors.Add(new DtoValidationError("Exercises cannot be null.", "PlannedWorkout", "Exercises"));
             }
             else
             {
@@ -73,7 +73,40 @@ namespace Ianf.Fittrack.Workouts.Domain
                     ex.Match
                     (
                         Left: (err) => errors.AddRange(err),
-                        Right: (r) => plannedExercises.Add(r)
+                        Right: (r) => exercises.Add(r)
+                    );
+                });
+            }
+
+            var programName = new ProgramName();
+            ProgramName.CreateProgramName(workout.ProgramName)
+                .Match(
+                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "PlannedWorkout", "ProgramName")),
+                    Some: (s) => programName = s
+                );
+
+            if(errors.Any()) return errors;
+            return new PlannedWorkout(workout.Id, programName, workout.WorkoutTime, exercises);
+        }
+
+        public static Either<IEnumerable<DtoValidationError>, ActualWorkout> ValidateDto(this Dto.ActualWorkout workout)
+        {
+            var errors = new List<DtoValidationError>();
+            var exercises = new List<Exercise>();
+
+            if (workout.Exercises == null)
+            {
+                errors.Add(new DtoValidationError("Exercises cannot be null.", "PlannedWorkout", "Exercises"));
+            }
+            else
+            {
+                workout.Exercises.ForEach(e =>
+                {
+                    var ex = ValidateDto(e);
+                    ex.Match
+                    (
+                        Left: (err) => errors.AddRange(err),
+                        Right: (r) => exercises.Add(r)
                     );
                 });
             }
@@ -85,8 +118,14 @@ namespace Ianf.Fittrack.Workouts.Domain
                     Some: (s) => programName = s
                 );
 
+            var plannedWorkout = new PlannedWorkout(0, programName, DateTime.Now, new List<Exercise>());
+            ValidateDto(workout.PlannedWorkout).Match
+            (
+                Left: (err) => errors.AddRange(err),
+                Right: (p) => plannedWorkout = p
+            );
             if(errors.Any()) return errors;
-            return new PlannedWorkout(workout.Id, programName, workout.WorkoutTime, plannedExercises);
+            return new ActualWorkout(workout.Id, plannedWorkout, programName, workout.WorkoutTime, exercises);
         }
     }
 }

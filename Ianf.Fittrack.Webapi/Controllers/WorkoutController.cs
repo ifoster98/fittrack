@@ -23,7 +23,7 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<int>> AddNewWorkoutAsync(Workouts.Dto.Workout workout)
+        public async Task<ActionResult<int>> AddNewWorkoutAsync(Workouts.Dto.PlannedWorkout workout)
         {
             var result = await _workoutService.AddNewWorkoutAsync(workout);
             ActionResult<int> returnValue = Ok();

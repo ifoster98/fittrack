@@ -7,8 +7,8 @@ namespace Ianf.Fittrack.Workouts.Domain
 {
     public record PlannedWorkout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
     { 
-        public Dto.Workout ToDto() =>
-            new Dto.Workout() {
+        public Dto.PlannedWorkout ToDto() =>
+            new Dto.PlannedWorkout() {
                 Id = this.Id,
                 WorkoutTime = this.WorkoutTime,
                 ProgramName = this.ProgramName.Value,
