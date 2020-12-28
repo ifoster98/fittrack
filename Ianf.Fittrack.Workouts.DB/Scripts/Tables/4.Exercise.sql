@@ -18,6 +18,6 @@ ALTER TABLE [dbo].[Exercise] WITH NOCHECK ADD
 	CONSTRAINT [FK_Planned_Workout_Id] FOREIGN KEY ([PlannedWorkoutId]) REFERENCES [dbo].[PlannedWorkout]([Id])
 GO
 
---ALTER TABLE [dbo].[Exercise] WITH NOCHECK ADD 
---	CONSTRAINT [FK_Actual_Workout_Id] FOREIGN KEY ([ActualWorkoutId]) REFERENCES [dbo].[ActualWorkout]([Id])
---GO
+ALTER TABLE [dbo].[Exercise] WITH NOCHECK ADD 
+	CONSTRAINT [FK_Actual_Workout_Id] FOREIGN KEY ([ActualWorkoutId]) REFERENCES [dbo].[ActualWorkout]([Id])
+GO

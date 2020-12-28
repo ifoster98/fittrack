@@ -13,8 +13,8 @@ namespace Ianf.Fittrack.Workouts.Repositories.Entities
         }
 
         public int Id { get; set; }
-        public int PlannedWorkoutId { get; set; }
-        public int ActualWorkoutId { get; set; }
+        public int? PlannedWorkoutId { get; set; }
+        public int? ActualWorkoutId { get; set; }
         public byte ExerciseType { get; set; }
         public int Order { get; set; }
 
