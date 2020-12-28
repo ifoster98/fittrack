@@ -5,7 +5,7 @@ using LanguageExt;
 
 namespace Ianf.Fittrack.Workouts.Domain 
 {
-    public record ActualWorkout(int Id, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
+    public record ActualWorkout(int Id, PlannedWorkout PlannedWorkout, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
     { 
         public Dto.Workout ToDto() =>
             new Dto.Workout() {

@@ -50,5 +50,22 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 ProgramName = workout.ProgramName.Value,
                 Exercises = workout.Exercises.Select(p => p.ToEntity()).ToList()
             };
+
+        public static Domain.ActualWorkout ToDomain(this Entities.ActualWorkout workout) =>
+            new Domain.ActualWorkout(
+                workout.Id,
+                ToDomain(workout.PlannedWorkout),
+                ProgramName.CreateProgramName(workout.ProgramName).IfNone(new ProgramName()),
+                workout.WorkoutTime,
+                workout.Exercises.Select(e => ToDomain(e)).ToList()
+            );
+
+        public static Entities.ActualWorkout ToEntity(this Domain.ActualWorkout workout) =>
+            new Entities.ActualWorkout() {
+                PlannedWorkout = ToEntity(workout.PlannedWorkout),
+                WorkoutTime = workout.WorkoutTime,
+                ProgramName = workout.ProgramName.Value,
+                Exercises = workout.Exercises.Select(p => p.ToEntity()).ToList()
+            };
     }
 }

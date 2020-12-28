@@ -37,5 +37,13 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 .Where(w => w.WorkoutTime.Date == workoutDate.Date 
                     && w.ProgramName == programName.Value)
                 .AnyAsync();
+
+        public async Task<PositiveInt> SaveWorkoutAsync(ActualWorkout workout)
+        {
+            var entity = workout.ToEntity();
+            _dbContext.ActualWorkouts.Add(entity);
+            await _dbContext.SaveChangesAsync();
+            return PositiveInt.CreatePositiveInt(entity.Id).IfNone(new PositiveInt());
+        } 
     }
 }

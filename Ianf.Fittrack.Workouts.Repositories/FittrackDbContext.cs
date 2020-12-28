@@ -18,23 +18,67 @@ namespace Ianf.Fittrack.Workouts.Repositories
         {
         }
 
+        public virtual DbSet<ActualWorkout> ActualWorkouts { get; set; }
         public virtual DbSet<Exercise> Exercises { get; set; }
-        public virtual DbSet<Set> Sets { get; set; }
         public virtual DbSet<PlannedWorkout> PlannedWorkouts { get; set; }
+        public virtual DbSet<Set> Sets { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=192.168.1.73; Database=Fittrack; User Id=SA; Password=31Freeble$");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<ActualWorkout>(entity =>
+            {
+                entity.ToTable("ActualWorkout");
+
+                entity.Property(e => e.ProgramName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkoutTime).HasColumnType("datetime");
+
+                entity.HasOne(d => d.PlannedWorkout)
+                    .WithMany(p => p.ActualWorkouts)
+                    .HasForeignKey(d => d.PlannedWorkoutId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Planned_Workout_Id");
+            });
+
             modelBuilder.Entity<Exercise>(entity =>
             {
                 entity.ToTable("Exercise");
 
+                entity.HasOne(d => d.ActualWorkout)
+                    .WithMany(p => p.Exercises)
+                    .HasForeignKey(d => d.ActualWorkoutId)
+                    .HasConstraintName("FK_Actual_Workout_Id");
+
                 entity.HasOne(d => d.PlannedWorkout)
                     .WithMany(p => p.Exercises)
                     .HasForeignKey(d => d.PlannedWorkoutId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Workout_Id");
+                    .HasConstraintName("FK_Exercise_Planned_Workout_Id");
+            });
+
+            modelBuilder.Entity<PlannedWorkout>(entity =>
+            {
+                entity.ToTable("PlannedWorkout");
+
+                entity.Property(e => e.ProgramName)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkoutTime).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<Set>(entity =>
@@ -48,18 +92,6 @@ namespace Ianf.Fittrack.Workouts.Repositories
                     .HasForeignKey(d => d.ExerciseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Exercise_Id");
-            });
-
-            modelBuilder.Entity<PlannedWorkout>(entity =>
-            {
-                entity.ToTable("PlannedWorkout");
-
-                entity.Property(e => e.ProgramName)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.WorkoutTime).HasColumnType("datetime");
             });
 
             OnModelCreatingPartial(modelBuilder);

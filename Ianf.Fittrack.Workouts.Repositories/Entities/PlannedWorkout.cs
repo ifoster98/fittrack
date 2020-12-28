@@ -9,6 +9,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Entities
     {
         public PlannedWorkout()
         {
+            ActualWorkouts = new HashSet<ActualWorkout>();
             Exercises = new HashSet<Exercise>();
         }
 
@@ -16,6 +17,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Entities
         public string ProgramName { get; set; }
         public DateTime WorkoutTime { get; set; }
 
+        public virtual ICollection<ActualWorkout> ActualWorkouts { get; set; }
         public virtual ICollection<Exercise> Exercises { get; set; }
     }
 }

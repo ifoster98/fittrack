@@ -17,6 +17,7 @@ namespace Ianf.Fittrack.Workouts.Repositories.Entities
         public string ProgramName { get; set; }
         public DateTime WorkoutTime { get; set; }
 
+        public virtual PlannedWorkout PlannedWorkout { get; set; }
         public virtual ICollection<Exercise> Exercises { get; set; }
     }
 }

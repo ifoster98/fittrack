@@ -18,8 +18,8 @@ namespace Ianf.Fittrack.Workouts.Repositories.Entities
         public byte ExerciseType { get; set; }
         public int Order { get; set; }
 
-        public virtual PlannedWorkout PlannedWorkout { get; set; }
         public virtual ActualWorkout ActualWorkout { get; set; }
+        public virtual PlannedWorkout PlannedWorkout { get; set; }
         public virtual ICollection<Set> Sets { get; set; }
     }
 }
