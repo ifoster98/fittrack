@@ -55,7 +55,7 @@ namespace Ianf.Fittrack.Workouts.Domain
             return new Exercise(exercise.ExerciseType, sets, order);
         }
 
-        public static Either<IEnumerable<DtoValidationError>, Workout> ValidateDto(this Dto.Workout workout)
+        public static Either<IEnumerable<DtoValidationError>, PlannedWorkout> ValidateDto(this Dto.Workout workout)
         {
             var errors = new List<DtoValidationError>();
             var plannedExercises = new List<Exercise>();
@@ -86,7 +86,7 @@ namespace Ianf.Fittrack.Workouts.Domain
                 );
 
             if(errors.Any()) return errors;
-            return new Workout(workout.Id, programName, workout.WorkoutTime, plannedExercises);
+            return new PlannedWorkout(workout.Id, programName, workout.WorkoutTime, plannedExercises);
         }
     }
 }

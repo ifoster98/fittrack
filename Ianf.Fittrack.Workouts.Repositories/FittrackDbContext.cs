@@ -20,7 +20,7 @@ namespace Ianf.Fittrack.Workouts.Repositories
 
         public virtual DbSet<Exercise> Exercises { get; set; }
         public virtual DbSet<Set> Sets { get; set; }
-        public virtual DbSet<Workout> Workouts { get; set; }
+        public virtual DbSet<PlannedWorkout> PlannedWorkouts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,9 +30,9 @@ namespace Ianf.Fittrack.Workouts.Repositories
             {
                 entity.ToTable("Exercise");
 
-                entity.HasOne(d => d.Workout)
+                entity.HasOne(d => d.PlannedWorkout)
                     .WithMany(p => p.Exercises)
-                    .HasForeignKey(d => d.WorkoutId)
+                    .HasForeignKey(d => d.PlannedWorkoutId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Workout_Id");
             });
@@ -50,9 +50,9 @@ namespace Ianf.Fittrack.Workouts.Repositories
                     .HasConstraintName("FK_Exercise_Id");
             });
 
-            modelBuilder.Entity<Workout>(entity =>
+            modelBuilder.Entity<PlannedWorkout>(entity =>
             {
-                entity.ToTable("Workout");
+                entity.ToTable("PlannedWorkout");
 
                 entity.Property(e => e.ProgramName)
                     .IsRequired()

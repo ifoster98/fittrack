@@ -2,7 +2,6 @@ using Ianf.Fittrack.Workouts.Domain;
 using Ianf.Fittrack.Workouts.Persistance.Interfaces;
 using Ianf.Fittrack.Workouts.Services.Interfaces;
 using LanguageExt;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +26,7 @@ namespace Ianf.Fittrack.Workouts.Services
                 .BindAsync(ValidateWorkoutToAdd)
                 .MapAsync(w => _workoutRepository.SaveWorkoutAsync(w));
 
-        public async Task<Either<IEnumerable<DtoValidationError>, Workout>> ValidateWorkoutToAdd(Workout workout)
+        public async Task<Either<IEnumerable<DtoValidationError>, PlannedWorkout>> ValidateWorkoutToAdd(PlannedWorkout workout)
         {
             var errors = new List<DtoValidationError>();
             if (workout.Exercises.Count == 0) errors.Add(new DtoValidationError("Must have exercises mapped in a new workout.", "Workout", "Exercises"));

@@ -59,14 +59,14 @@ namespace Ianf.Fittrack.UnitTest.Services
             // Assemble
             var newWorkout = GetSampleWorkout();
             _workoutRepository
-                .Setup(w => w.SaveWorkoutAsync(It.IsAny<Fittrack.Workouts.Domain.Workout>()))
+                .Setup(w => w.SaveWorkoutAsync(It.IsAny<Fittrack.Workouts.Domain.PlannedWorkout>()))
                 .Returns(Task.FromResult(PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt())));
 
             // Act
             var result = await _workoutService.AddNewWorkoutAsync(newWorkout);
 
             // Assert
-            _workoutRepository.Verify(w => w.SaveWorkoutAsync(It.IsAny<Fittrack.Workouts.Domain.Workout>()));
+            _workoutRepository.Verify(w => w.SaveWorkoutAsync(It.IsAny<Fittrack.Workouts.Domain.PlannedWorkout>()));
             result.Match(
                 Left: (err) => Assert.False(true, "Expected no errors to be returned."),
                 Right: (newId) => Assert.Equal(1, newId.Value)
@@ -263,7 +263,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new ProgramName()),
                 DateTime.Now,
@@ -271,7 +271,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.PlannedWorkout>
             {
                 workout, workoutTwo
             }));
@@ -295,7 +295,7 @@ namespace Ianf.Fittrack.UnitTest.Services
         public async void TestGetNextWorkoutReturnsNoneIfNoWorkouts()
         {
             // Assemble
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.PlannedWorkout>
             {
             }));
 
@@ -317,7 +317,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new ProgramName()),
                 DateTime.Now,
@@ -325,7 +325,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.PlannedWorkout>
             {
                 workout, workoutTwo
             }));
@@ -348,7 +348,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new ProgramName()),
                 DateTime.Now,
@@ -356,7 +356,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.PlannedWorkout>
             {
                 workout, workoutTwo
             }));
@@ -379,7 +379,7 @@ namespace Ianf.Fittrack.UnitTest.Services
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
             newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.Workout(
+            var workout = newWorkout.ValidateDto().IfLeft(new Fittrack.Workouts.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new ProgramName()),
                 DateTime.Now,
@@ -387,7 +387,7 @@ namespace Ianf.Fittrack.UnitTest.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(Task.FromResult(new List<Fittrack.Workouts.Domain.PlannedWorkout>
             {
                 workout, workoutTwo
             }));

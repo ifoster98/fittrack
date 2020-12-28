@@ -20,8 +20,8 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
 
         protected DbContextOptions<FittrackDbContext> ContextOptions { get; }
         
-        private Domain.Workout GetSampleWorkout() => 
-            new Domain.Workout(
+        private Domain.PlannedWorkout GetSampleWorkout() => 
+            new Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName("Workout1").IfNone(new ProgramName()),
                 DateTime.UtcNow.AddDays(-1),
@@ -55,9 +55,9 @@ namespace Ianf.Fittrack.Workouts.Repositories.Tests
                 await repository.SaveWorkoutAsync(workout);
 
                 // Assert
-                var workoutCount = await context.Workouts.CountAsync();
+                var workoutCount = await context.PlannedWorkouts.CountAsync();
                 Assert.Equal(1, workoutCount);
-                var result = await context.Workouts.FirstAsync();
+                var result = await context.PlannedWorkouts.FirstAsync();
                 Assert.NotNull(result);
                 Assert.Single(result.Exercises);
                 Assert.Single(result.Exercises.First().Sets);

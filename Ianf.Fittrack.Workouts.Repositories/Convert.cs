@@ -36,16 +36,16 @@ namespace Ianf.Fittrack.Workouts.Repositories
                 Sets = exercise.Sets.Select(s => s.ToEntity()).ToList()
             };
 
-        public static Domain.Workout ToDomain(this Entities.Workout workout) =>
-            new Domain.Workout(
+        public static Domain.PlannedWorkout ToDomain(this Entities.PlannedWorkout workout) =>
+            new Domain.PlannedWorkout(
                 workout.Id,
                 ProgramName.CreateProgramName(workout.ProgramName).IfNone(new ProgramName()),
                 workout.WorkoutTime,
                 workout.Exercises.Select(e => ToDomain(e)).ToList()
             );
 
-        public static Entities.Workout ToEntity(this Domain.Workout workout) =>
-            new Entities.Workout() {
+        public static Entities.PlannedWorkout ToEntity(this Domain.PlannedWorkout workout) =>
+            new Entities.PlannedWorkout() {
                 WorkoutTime = workout.WorkoutTime,
                 ProgramName = workout.ProgramName.Value,
                 Exercises = workout.Exercises.Select(p => p.ToEntity()).ToList()

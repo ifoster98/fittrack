@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Ianf.Fittrack.Workouts.Repositories.Entities
 {
-    public partial class Workout
+    public partial class ActualWorkout
     {
-        public Workout()
+        public ActualWorkout()
         {
             Exercises = new HashSet<Exercise>();
         }
