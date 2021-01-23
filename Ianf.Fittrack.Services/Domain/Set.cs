@@ -1,4 +1,4 @@
-namespace Ianf.Fittrack.Workouts.Domain
+namespace Ianf.Fittrack.Services.Domain
 {
     public record Set(PositiveInt Reps, Weight Weight, PositiveInt Order) 
     { 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LanguageExt;
 
-namespace Ianf.Fittrack.Workouts.Domain 
+namespace Ianf.Fittrack.Services.Domain
 {
     public record ActualWorkout(int Id, PlannedWorkout PlannedWorkout, ProgramName ProgramName, DateTime WorkoutTime, List<Exercise> Exercises) 
     { 

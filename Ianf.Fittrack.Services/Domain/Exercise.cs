@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Ianf.Fittrack.Workouts.Dto;
+using Ianf.Fittrack.Services.Dto;
 using LanguageExt;
 
-namespace Ianf.Fittrack.Workouts.Domain
+namespace Ianf.Fittrack.Services.Domain
 {
     public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { 
 

@@ -2,7 +2,7 @@ using LanguageExt;
 using System;
 using static LanguageExt.Prelude;
 
-namespace Ianf.Fittrack.Workouts.Domain
+namespace Ianf.Fittrack.Services.Domain
 {
     public struct PositiveInt : IEquatable<PositiveInt>
     {

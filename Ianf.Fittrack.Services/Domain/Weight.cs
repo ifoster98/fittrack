@@ -1,9 +1,8 @@
 using LanguageExt;
 using System;
-using System.Collections.Generic;
 using static LanguageExt.Prelude;
 
-namespace Ianf.Fittrack.Workouts.Domain
+namespace Ianf.Fittrack.Services.Domain
 {
     public struct Weight : IEquatable<Weight>
     {
