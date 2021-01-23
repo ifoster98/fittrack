@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('./assets/rugbyunionbg.jpg');
+}
+
+ul {
+    list-style: none;
+}
+
+.fixed-header {
+    width: 100%;
+    position: sticky;
+    background: #333;
+    padding: 10px 0;
+    color: #fff;
+}
+
+.fixed-header {
+    top: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto auto;
+}
+
+button {
+    color: #fff;
+}
+
+ul {
+    width: 80%;
+}
+
+.login, .logout {
+    float: right;
+    background-color: blue;
+}
+
+.gamechoice, .evententry {
+    background-color: green;
+    width: 100%;
+    margin:2%;
+}
+
+.endmatch {
+    background-color: red;
+    float: right;
+    bottom: 0;
+}

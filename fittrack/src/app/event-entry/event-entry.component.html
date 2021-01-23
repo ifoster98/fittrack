@@ -1,0 +1,9 @@
+<span class="match">Match: {{currentMatch}}</span>
+<ul class="events">
+    <li *ngFor="let event of events">
+        <button class="evententry" (click)="registerEvent(event)">{{event.name}}</button>
+    </li>
+</ul>
+<span>{{message}}</span>
+<button class="editentries" (click)="editEntries()">Edit entries</button>
+<button class="endmatch" (click)="endMatch()">End match</button>

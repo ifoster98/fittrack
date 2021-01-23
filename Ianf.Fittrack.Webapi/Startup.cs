@@ -4,11 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Ianf.Fittrack.Workouts.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Ianf.Fittrack.Workouts.Services.Interfaces;
-using Ianf.Fittrack.Workouts.Services;
-using Ianf.Fittrack.Workouts.Persistance.Interfaces;
+using Ianf.Fittrack.Services.Interfaces;
+using Ianf.Fittrack.Repositories;
+using Ianf.Fittrack.Services;
 
 namespace Ianf.Fittrack.Webapi
 {
@@ -21,12 +20,23 @@ namespace Ianf.Fittrack.Webapi
 
         public IConfiguration Configuration { get; }
 
+        private readonly string LocalOrigins = "_localOrigins";
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<FittrackDbContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("FittrackDatabase")));
-            services.AddTransient<IWorkoutService, WorkoutService>();
-            services.AddTransient<IWorkoutRepository, WorkoutRepository>();
+            services.AddTransient<IMatchEventService, MatchEventService>();
+            services.AddTransient<IMatchEventRepository, MatchEventRepository>();
+            services.AddCors(options => {
+                options.AddPolicy(name: LocalOrigins,
+                    builder => {
+                        builder.WithOrigins("*")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -44,6 +54,7 @@ namespace Ianf.Fittrack.Webapi
             }
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(LocalOrigins);
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

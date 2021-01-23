@@ -1,9 +1,21 @@
 version: "3"
 
 services:
+  webui: 
+    build: "./artifacts/angular/"
+    container_name: gtui1
+    restart: always
+    ports:
+      - "8080:80"
+      - "444:443"
+    depends_on: 
+      - webserver
+    links:
+      - webserver
+
   webserver: 
-    build: "./artifacts/"
-    container_name: web1
+    build: "./artifacts/webapi/"
+    container_name: gtweb1
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -17,7 +29,7 @@ services:
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sql1
+    container_name: gtsql1
     environment:
       - SA_PASSWORD=31Freeble$$
       - ACCEPT_EULA=Y

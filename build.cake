@@ -1,6 +1,7 @@
 #addin nuget:?package=Cake.Docker&version=0.11.1
 #addin nuget:?package=Cake.Json&version=5.2.0
 #addin nuget:?package=Newtonsoft.Json&version=11.0.2
+#addin nuget:?package=Cake.Npm&version=0.17.0
 using System.Runtime.CompilerServices;
 using System.Threading;
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,7 +10,7 @@ using System.Threading;
 
 var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
-var solution = Argument("solution", "./fittrack.sln");
+var webSolution = Argument("webSolution", "./fittrack.sln");
 var dbSolution = Argument("dbSolution", "./fittrackdb.sln");
 var testSolution = Argument("testSolution", "./fittrackapitest.sln");
 var artifactDirectory = Argument("artifactDirectory", "./artifacts/");
@@ -28,7 +29,7 @@ var dbConnectionString = $"Server={server}; Database={database}; User Id=SA; Pas
 Task("Clean")
 .Does(() => {
    CleanDirectory(artifactDirectory);
-   DotNetCoreClean(solution);
+   DotNetCoreClean(webSolution);
    DotNetCoreClean(dbSolution);
    DotNetCoreClean(testSolution);
 });
@@ -36,7 +37,7 @@ Task("Clean")
 Task("Build")
 .IsDependentOn("Clean")
 .Does(() => {
-   DotNetCoreBuild(solution, new DotNetCoreBuildSettings
+   DotNetCoreBuild(webSolution, new DotNetCoreBuildSettings
    {
       Configuration = configuration,
    });
@@ -48,12 +49,24 @@ Task("Build")
    {
       Configuration = configuration,
    });
+
+   NpmInstall(new NpmInstallSettings {
+      WorkingDirectory = "./fittrack/"
+   });
+
+   // Angular build
+   StartProcess("ng", new ProcessSettings {
+      WorkingDirectory = "./fittrack/",
+      Arguments = new ProcessArgumentBuilder()
+         .Append("build --prod")
+      }
+   );
 });
 
 Task("Test")
 .IsDependentOn("Build")
 .Does(() => {
-    DotNetCoreTest("Ianf.Fittrack.Workouts.UnitTest/Ianf.Fittrack.Workouts.UnitTest.csproj", new DotNetCoreTestSettings
+    DotNetCoreTest("Ianf.Fittrack.Services.Tests/Ianf.Fittrack.Services.Tests.csproj", new DotNetCoreTestSettings
     {
        Configuration = configuration,
        NoBuild = true
@@ -63,17 +76,20 @@ Task("Test")
 Task("Publish")
 .IsDependentOn("Test")
 .Does(() => {
-   DotNetCorePublish(solution, new DotNetCorePublishSettings
+   DotNetCorePublish(webSolution, new DotNetCorePublishSettings
    {
       Configuration = configuration,
-      OutputDirectory = $"{artifactDirectory}/webapp/"
+      OutputDirectory = $"{artifactDirectory}/webapi/"
    });
    DotNetCorePublish(dbSolution, new DotNetCorePublishSettings
    {
       Configuration = configuration,
       OutputDirectory = $"{artifactDirectory}/db/"
    });
-   CopyFile("Ianf.Fittrack.Webapi/Docker/Dockerfile", $"{artifactDirectory}/Dockerfile");
+   CopyFile("Ianf.Fittrack.Webapi/Docker/Dockerfile", $"{artifactDirectory}/webapi/Dockerfile");
+   CopyDirectory("./fittrack/dist", $"{artifactDirectory}/angular/dist");
+   CopyFile("./fittrack/Dockerfile", $"{artifactDirectory}/angular/Dockerfile");
+   CopyFile("./fittrack/nginx.conf", $"{artifactDirectory}/angular/nginx.conf");
 });
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,7 +99,7 @@ Task("Publish")
 Task("Local-Configuration")
 .IsDependentOn("Publish")
 .Does(() => {
-  var configFile = $"{artifactDirectory}/webapp/appsettings.json";
+  var configFile = $"{artifactDirectory}/webapi/appsettings.json";
   dynamic config = ParseJsonFromFile(configFile);
   config.ConnectionStrings.FittrackDatabase = dbConnectionString;
   SerializeJsonToPrettyFile<JObject>(configFile, config);
@@ -114,7 +130,7 @@ Task("Create-Schema")
    Thread.Sleep(2000);
    StartProcess("docker", new ProcessSettings {
       Arguments = new ProcessArgumentBuilder()
-         .Append("exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE SCHEMA Fittrack AUTHORIZATION dbo\"")
+         .Append("exec -it gtsql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE SCHEMA Fittrack AUTHORIZATION dbo\"")
       }
    );
 });
@@ -125,7 +141,7 @@ Task("Create-Database")
    Thread.Sleep(2000);
    StartProcess("docker", new ProcessSettings {
       Arguments = new ProcessArgumentBuilder()
-         .Append("exec -it sql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE DATABASE Fittrack\"")
+         .Append("exec -it gtsql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE DATABASE Fittrack\"")
       }
    );
 });
@@ -135,7 +151,7 @@ Task("Run-DbUp")
 .Does(() => {
    StartProcess("dotnet", new ProcessSettings {
       Arguments = new ProcessArgumentBuilder()
-         .Append($"{artifactDirectory}/db/Ianf.Fittrack.Workouts.DB.dll")
+         .Append($"{artifactDirectory}/db/Ianf.Fittrack.DB.dll")
       }
    );
 });
@@ -158,20 +174,6 @@ Task("Rebuild")
 .IsDependentOn("Run-DbUp")
 .Does(() => {
 
-});
-
-///////////////////////////////////////////////////////////////////////////////
-// TEST REPOSITORY CODE
-///////////////////////////////////////////////////////////////////////////////
-
-Task("Repository-Tests")
-.IsDependentOn("Rebuild")
-.Does(() => {
-    DotNetCoreTest("Ianf.Fittrack.Workouts.Repositories.Tests/Ianf.Fittrack.Workouts.Repositories.Tests.csproj", new DotNetCoreTestSettings
-    {
-       Configuration = configuration,
-       NoBuild = true
-    });
 });
 
 ///////////////////////////////////////////////////////////////////////////////
