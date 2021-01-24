@@ -19,7 +19,7 @@ namespace Ianf.Fittrack.Repositories
         public virtual DbSet<ActualWorkout> ActualWorkouts { get; set; }
         public virtual DbSet<Exercise> Exercises { get; set; }
         public virtual DbSet<PlannedWorkout> PlannedWorkouts { get; set; }
-        public virtual DbSet<Set> Sets { get; set; }
+        public virtual DbSet<ExerciseEntry> ExerciseEntries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -72,14 +72,14 @@ namespace Ianf.Fittrack.Repositories
                 entity.Property(e => e.WorkoutTime).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<Set>(entity =>
+            modelBuilder.Entity<ExerciseEntry>(entity =>
             {
-                entity.ToTable("Set");
+                entity.ToTable("ExerciseEntry");
 
                 entity.Property(e => e.Weight).HasColumnType("decimal(18, 0)");
 
                 entity.HasOne(d => d.Exercise)
-                    .WithMany(p => p.Sets)
+                    .WithMany(p => p.ExerciseEntries)
                     .HasForeignKey(d => d.ExerciseId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Exercise_Id");
