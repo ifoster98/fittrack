@@ -9,37 +9,37 @@ namespace Ianf.Fittrack.Services.Domain
 {
     public static class Validator
     {
-        public static Either<IEnumerable<DtoValidationError>, ExerciseEntry> ValidateDto(this Dto.ExerciseEntry set)
+        public static Either<IEnumerable<DtoValidationError>, Set> ValidateDto(this Dto.Set set)
         {
             var errors = new List<DtoValidationError>();
             var reps = new PositiveInt();
             PositiveInt.CreatePositiveInt(set.Reps)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid amount for reps.", "ExerciseEntry", "Reps") ),
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for reps.", "Set", "Reps") ),
                     Some: (s) => reps = s
                 );
             var weight = new Weight();
             Weight.CreateWeight(set.Weight)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid amount for weight.", "ExerciseEntry", "Weight")),
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for weight.", "Set", "Weight")),
                     Some: (s) => weight = s
                 );
             var order = new PositiveInt();
             PositiveInt.CreatePositiveInt(set.Order)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid amount for order.", "ExerciseEntry", "Order")),
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for order.", "Set", "Order")),
                     Some: (s) => order = s
                 );
             if(errors.Any()) return errors;
-            return new ExerciseEntry(reps, weight, order);
+            return new Set(reps, weight, order);
         }
 
         public static Either<IEnumerable<DtoValidationError>, Exercise> ValidateDto(this Dto.Exercise exercise)
         {
             var errors = new List<DtoValidationError>();
-            var sets = new List<ExerciseEntry>();
+            var sets = new List<Set>();
 
-            exercise.ExerciseEntries.ForEach(s => {
+            exercise.Sets.ForEach(s => {
                 var e = ValidateDto(s);
                 e.Match
                 (

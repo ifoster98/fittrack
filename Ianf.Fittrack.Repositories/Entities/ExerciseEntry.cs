@@ -2,7 +2,7 @@
 
 namespace Ianf.Fittrack.Repositories.Entities
 {
-    public partial class ExerciseEntry
+    public partial class Set
     {
         public int Id { get; set; }
         public int ExerciseId { get; set; }

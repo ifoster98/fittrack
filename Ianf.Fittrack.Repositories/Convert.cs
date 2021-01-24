@@ -6,15 +6,15 @@ namespace Ianf.Fittrack.Repositories
 {
     public static class Convert
     {
-        public static Services.Domain.ExerciseEntry ToDomain(this Entities.ExerciseEntry set) =>
-            new Services.Domain.ExerciseEntry(
+        public static Services.Domain.Set ToDomain(this Entities.Set set) =>
+            new Services.Domain.Set(
                 PositiveInt.CreatePositiveInt(set.Reps).IfNone(new PositiveInt()),
                 Weight.CreateWeight(set.Weight).IfNone(new Weight()),
                 PositiveInt.CreatePositiveInt(set.Order).IfNone(new PositiveInt())
             );
 
-        public static Entities.ExerciseEntry ToEntity(this Services.Domain.ExerciseEntry set)  =>
-            new Entities.ExerciseEntry() {
+        public static Entities.Set ToEntity(this Services.Domain.Set set)  =>
+            new Entities.Set() {
                 Reps = set.Reps.Value,
                 Weight = set.Weight.Value,
                 Order = set.Order.Value
@@ -23,7 +23,7 @@ namespace Ianf.Fittrack.Repositories
         public static Services.Domain.Exercise ToDomain(this Entities.Exercise exercise) =>
             new Services.Domain.Exercise(
                 (ExerciseType)exercise.ExerciseType,
-                exercise.ExerciseEntries.Select(s => ToDomain(s)).ToList(),
+                exercise.Sets.Select(s => ToDomain(s)).ToList(),
                 PositiveInt.CreatePositiveInt(exercise.Order).IfNone(new PositiveInt())
             );
 
@@ -31,7 +31,7 @@ namespace Ianf.Fittrack.Repositories
             new Entities.Exercise() {
                 ExerciseType = (byte)exercise.ExerciseType,
                 Order = exercise.Order.Value,
-                ExerciseEntries = exercise.ExerciseEntries.Select(s => s.ToEntity()).ToList()
+                Sets = exercise.Sets.Select(s => s.ToEntity()).ToList()
             };
 
         public static Services.Domain.PlannedWorkout ToDomain(this Entities.PlannedWorkout workout) =>

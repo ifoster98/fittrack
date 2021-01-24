@@ -32,9 +32,9 @@ namespace Ianf.Fittrack.Services.Tests.Services
                     {
                         ExerciseType = Ianf.Fittrack.Services.Dto.ExerciseType.Deadlift,
                         Order = 1,
-                        ExerciseEntries = new List<Ianf.Fittrack.Services.Dto.ExerciseEntry>()
+                        Sets = new List<Ianf.Fittrack.Services.Dto.Set>()
                         {
-                            new Ianf.Fittrack.Services.Dto.ExerciseEntry()
+                            new Ianf.Fittrack.Services.Dto.Set()
                             {
                                 Reps = 5,
                                 Weight = 130,
@@ -136,15 +136,15 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExerciseEntryRepsIsNotPositive()
+        public void TestAddNewWorkoutFailsIfSetRepsIsNotPositive()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
-            var set = exercise.ExerciseEntries.First();
+            var set = exercise.Sets.First();
             set.Reps = -2;
-            exercise.ExerciseEntries.Clear();
-            exercise.ExerciseEntries.Add(set);
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = _workoutService.AddNewWorkout(newWorkout);
@@ -152,7 +152,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("ExerciseEntry", err.First().DtoType);
+                    Assert.Equal("Set", err.First().DtoType);
                     Assert.Equal("Reps", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
@@ -160,15 +160,15 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExerciseEntryWeightIsNotValid()
+        public void TestAddNewWorkoutFailsIfSetWeightIsNotValid()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
-            var set = exercise.ExerciseEntries.First();
+            var set = exercise.Sets.First();
             set.Weight = 130.1234M;
-            exercise.ExerciseEntries.Clear();
-            exercise.ExerciseEntries.Add(set);
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = _workoutService.AddNewWorkout(newWorkout);
@@ -176,7 +176,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("ExerciseEntry", err.First().DtoType);
+                    Assert.Equal("Set", err.First().DtoType);
                     Assert.Equal("Weight", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
@@ -184,15 +184,15 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExerciseEntryOrderIsNotPositive()
+        public void TestAddNewWorkoutFailsIfSetOrderIsNotPositive()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
             var exercise = newWorkout.Exercises.First();
-            var set = exercise.ExerciseEntries.First();
+            var set = exercise.Sets.First();
             set.Order = -4;
-            exercise.ExerciseEntries.Clear();
-            exercise.ExerciseEntries.Add(set);
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
 
             // Act
             var result = _workoutService.AddNewWorkout(newWorkout);
@@ -200,7 +200,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assert
             result.Match(
                 Left: (err) => {
-                    Assert.Equal("ExerciseEntry", err.First().DtoType);
+                    Assert.Equal("Set", err.First().DtoType);
                     Assert.Equal("Order", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")

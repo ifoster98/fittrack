@@ -5,13 +5,13 @@ using LanguageExt;
 
 namespace Ianf.Fittrack.Services.Domain
 {
-    public record Exercise(ExerciseType ExerciseType, List<ExerciseEntry> ExerciseEntries, PositiveInt Order) { 
+    public record Exercise(ExerciseType ExerciseType, List<Set> Sets, PositiveInt Order) { 
 
         public Dto.Exercise ToDto() =>
             new Dto.Exercise() {
                 ExerciseType = this.ExerciseType,
                 Order = this.Order.Value,
-                ExerciseEntries = this.ExerciseEntries.Select(s => s.ToDto()).ToList()
+                Sets = this.Sets.Select(s => s.ToDto()).ToList()
             };
     };
 }

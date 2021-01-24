@@ -1,6 +1,6 @@
 namespace Ianf.Fittrack.Services.Dto
 {
-    public struct ExerciseEntry
+    public struct Set
     {
         public int Reps { get; set; }
         public decimal Weight { get; set; }

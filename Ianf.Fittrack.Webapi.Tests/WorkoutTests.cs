@@ -28,9 +28,9 @@ namespace Ianf.Fittrack.Webapi.Tests
                     {
                         ExerciseType = Ianf.Fittrack.Services.Dto.ExerciseType.Deadlift,
                         Order = 1,
-                        ExerciseEntries = new List<Ianf.Fittrack.Services.Dto.ExerciseEntry>()
+                        Sets = new List<Ianf.Fittrack.Services.Dto.Set>()
                         {
-                            new Ianf.Fittrack.Services.Dto.ExerciseEntry()
+                            new Ianf.Fittrack.Services.Dto.Set()
                             {
                                 Reps = 5,
                                 Weight = 130,
