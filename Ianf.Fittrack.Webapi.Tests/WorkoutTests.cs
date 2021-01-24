@@ -42,7 +42,6 @@ namespace Ianf.Fittrack.Webapi.Tests
             };
             var url = $"{_baseUrl}/Workout"; 
             var body = JsonConvert.SerializeObject(newWorkout);
-            Console.WriteLine(body);
             var content = new StringContent(body,
                                     Encoding.UTF8, 
                                     "application/json");

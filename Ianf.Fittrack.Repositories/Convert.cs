@@ -54,7 +54,6 @@ namespace Ianf.Fittrack.Repositories
         public static Services.Domain.ActualWorkout ToDomain(this Entities.ActualWorkout workout) =>
             new Services.Domain.ActualWorkout(
                 workout.Id,
-                ToDomain(workout.PlannedWorkout),
                 ProgramName.CreateProgramName(workout.ProgramName).IfNone(new ProgramName()),
                 (ProgramType)workout.ProgramType,
                 workout.WorkoutTime,
@@ -63,7 +62,6 @@ namespace Ianf.Fittrack.Repositories
 
         public static Entities.ActualWorkout ToEntity(this Services.Domain.ActualWorkout workout) =>
             new Entities.ActualWorkout() {
-                PlannedWorkout = ToEntity(workout.PlannedWorkout),
                 WorkoutTime = workout.WorkoutTime,
                 ProgramName = workout.ProgramName.Value,
                 ProgramType = (byte)workout.ProgramType,

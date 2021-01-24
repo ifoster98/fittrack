@@ -43,12 +43,6 @@ namespace Ianf.Fittrack.Repositories
                     .IsUnicode(false);
 
                 entity.Property(e => e.WorkoutTime).HasColumnType("datetime");
-
-                entity.HasOne(d => d.PlannedWorkout)
-                    .WithMany(p => p.ActualWorkouts)
-                    .HasForeignKey(d => d.PlannedWorkoutId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Planned_Workout_Id");
             });
 
             modelBuilder.Entity<Exercise>(entity =>

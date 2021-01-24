@@ -120,14 +120,8 @@ namespace Ianf.Fittrack.Services.Domain
                     Some: (s) => programName = s
                 );
 
-            var plannedWorkout = new PlannedWorkout(0, programName, ProgramType.UpperLower, DateTime.Now, new List<Exercise>());
-            ValidateDto(workout.PlannedWorkout).Match
-            (
-                Left: (err) => errors.AddRange(err),
-                Right: (p) => plannedWorkout = p
-            );
             if(errors.Any()) return errors;
-            return new ActualWorkout(workout.Id, plannedWorkout, programName, workout.ProgramType, workout.WorkoutTime, exercises);
+            return new ActualWorkout(workout.Id, programName, workout.ProgramType, workout.WorkoutTime, exercises);
         }
     }
 }
