@@ -9,6 +9,25 @@ namespace Ianf.Fittrack.Services.Domain
 {
     public static class Validator
     {
+        public static Either<IEnumerable<DtoValidationError>, Rest> ValidateDto(this Dto.Rest rest)
+        {
+            var errors = new List<DtoValidationError>();
+            var minutes = new PositiveInt();
+            PositiveInt.CreatePositiveInt(rest.Minutes)
+                .Match(
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for minutes.", "Rest", "Minutes") ),
+                    Some: (s) => minutes = s
+                );
+            var seconds = new PositiveInt();
+            PositiveInt.CreatePositiveInt(rest.Seconds)
+                .Match(
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for seconds.", "Rest", "Seconds")),
+                    Some: (s) => seconds = s
+                );
+            if(errors.Any()) return errors;
+            return new Rest(minutes, seconds);
+        }
+
         public static Either<IEnumerable<DtoValidationError>, Set> ValidateDto(this Dto.Set set)
         {
             var errors = new List<DtoValidationError>();
