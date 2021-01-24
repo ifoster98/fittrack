@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using LanguageExt;
 using System.Collections.Generic;
 using Ianf.Fittrack.Services.Errors;
@@ -9,8 +8,8 @@ namespace Ianf.Fittrack.Services.Interfaces
 {
     public interface IWorkoutService
     {
-        Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.PlannedWorkout workout);
+        Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.PlannedWorkout workout);
 
-        Task<Option<Dto.PlannedWorkout>> GetNextWorkoutAsync(DateTime workoutDay, string programName);
+        Option<Dto.PlannedWorkout> GetNextWorkout(DateTime workoutDay, string programName);
     }
 }

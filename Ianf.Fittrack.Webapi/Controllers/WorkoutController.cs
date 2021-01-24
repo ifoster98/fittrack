@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Ianf.Fittrack.Services.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -23,9 +22,9 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<int>> AddNewWorkoutAsync(Services.Dto.PlannedWorkout workout)
+        public ActionResult<int> AddNewWorkout(Services.Dto.PlannedWorkout workout)
         {
-            var result = await _workoutService.AddNewWorkoutAsync(workout);
+            var result = _workoutService.AddNewWorkout(workout);
             ActionResult<int> returnValue = Ok();
             result.Match(
                 Left: (err) => returnValue = BadRequest(err),
@@ -38,9 +37,9 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetNextWorkoutAsync(DateTime workoutDay, string programName)
+        public IActionResult GetNextWorkout(DateTime workoutDay, string programName)
         {
-            var result = await _workoutService.GetNextWorkoutAsync(workoutDay, programName);
+            var result = _workoutService.GetNextWorkout(workoutDay, programName);
             IActionResult returnValue = Ok();
             result.Match(
                 None: () => returnValue = NotFound(),

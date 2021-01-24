@@ -121,42 +121,6 @@ Task("DC-Up")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// SET UP DB SERVER
-///////////////////////////////////////////////////////////////////////////////
-
-Task("Create-Schema")
-.IsDependentOn("DC-Up")
-.Does(() => {
-   Thread.Sleep(2000);
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("exec -it gtsql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE SCHEMA Fittrack AUTHORIZATION dbo\"")
-      }
-   );
-});
-
-Task("Create-Database")
-.IsDependentOn("Create-Schema")
-.Does(() => {
-   Thread.Sleep(2000);
-   StartProcess("docker", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append("exec -it gtsql1 /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P \"31Freeble$\" -Q \"CREATE DATABASE Fittrack\"")
-      }
-   );
-});
-
-Task("Run-DbUp")
-.IsDependentOn("Create-Database")
-.Does(() => {
-   StartProcess("dotnet", new ProcessSettings {
-      Arguments = new ProcessArgumentBuilder()
-         .Append($"{artifactDirectory}/db/Ianf.Fittrack.DB.dll")
-      }
-   );
-});
-
-///////////////////////////////////////////////////////////////////////////////
 // TEAR DOWN INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -171,7 +135,7 @@ Task("DC-Down")
 ///////////////////////////////////////////////////////////////////////////////
 Task("Rebuild")
 .IsDependentOn("DC-Down")
-.IsDependentOn("Run-DbUp")
+.IsDependentOn("DC-Up")
 .Does(() => {
 
 });

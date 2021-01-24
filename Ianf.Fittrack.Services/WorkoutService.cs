@@ -2,7 +2,6 @@ using LanguageExt;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using static LanguageExt.Prelude;
 using Ianf.Fittrack.Services.Interfaces;
 using Ianf.Fittrack.Services.Errors;
@@ -19,26 +18,26 @@ namespace Ianf.Fittrack.Services
             _workoutRepository = workoutRepository;
         }
 
-        public async Task<Either<IEnumerable<DtoValidationError>, PositiveInt>> AddNewWorkoutAsync(Dto.PlannedWorkout workout) => 
-            await workout
+        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.PlannedWorkout workout) => 
+            workout
                 .ValidateDto()
-                .BindAsync(ValidateWorkoutToAdd)
-                .MapAsync(w => _workoutRepository.SaveWorkoutAsync(w));
+                .Bind(ValidateWorkoutToAdd)
+                .Map(w => _workoutRepository.AddWorkout(w));
 
-        public async Task<Either<IEnumerable<DtoValidationError>, Domain.PlannedWorkout>> ValidateWorkoutToAdd(Domain.PlannedWorkout workout)
+        public Either<IEnumerable<DtoValidationError>, Domain.PlannedWorkout> ValidateWorkoutToAdd(Domain.PlannedWorkout workout)
         {
             var errors = new List<DtoValidationError>();
             if (workout.Exercises.Count == 0) errors.Add(new DtoValidationError("Must have exercises mapped in a new workout.", "PlannedWorkout", "Exercises"));
-            var foo = await _workoutRepository.HasWorkout(workout.WorkoutTime, workout.ProgramName);
+            var foo = _workoutRepository.HasWorkout(workout.WorkoutTime, workout.ProgramType, workout.ProgramName);
             if(foo) errors.Add(new DtoValidationError("Duplicate workout definition.", "PlannedWorkout", ""));
             if (errors.Any()) return errors;
             return workout;
         }
 
-        public async Task<Option<Dto.PlannedWorkout>> GetNextWorkoutAsync(DateTime workoutDay, string programName) 
+        public Option<Dto.PlannedWorkout> GetNextWorkout(DateTime workoutDay, string programName) 
         {
             if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
-            var workouts = await _workoutRepository.GetWorkoutsAfterDate(workoutDay);
+            var workouts = _workoutRepository.GetPlannedWorkoutsAfterDate(workoutDay);
             workouts = workouts.Where(w => w.ProgramName.Value.Equals(programName)).ToList();
             return workouts.Any()
                 ? Some(workouts
