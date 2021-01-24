@@ -11,16 +11,8 @@ using System.Threading;
 var target = Argument("target", "Test");
 var configuration = Argument("configuration", "Release");
 var webSolution = Argument("webSolution", "./fittrack.sln");
-var dbSolution = Argument("dbSolution", "./fittrackdb.sln");
 var testSolution = Argument("testSolution", "./fittrackapitest.sln");
 var artifactDirectory = Argument("artifactDirectory", "./artifacts/");
-
-var server = Argument("server", "db");
-var database = Argument("database", "Fittrack");
-var dbUser = Argument("dbUser", "SA");
-var dbPassword = Argument("dbPassword", "31Freeble$");
-
-var dbConnectionString = $"Server={server}; Database={database}; User Id=SA; Password=31Freeble$";
 
 ///////////////////////////////////////////////////////////////////////////////
 // BUILD TASKS
@@ -30,7 +22,6 @@ Task("Clean")
 .Does(() => {
    CleanDirectory(artifactDirectory);
    DotNetCoreClean(webSolution);
-   DotNetCoreClean(dbSolution);
    DotNetCoreClean(testSolution);
 });
 
@@ -38,10 +29,6 @@ Task("Build")
 .IsDependentOn("Clean")
 .Does(() => {
    DotNetCoreBuild(webSolution, new DotNetCoreBuildSettings
-   {
-      Configuration = configuration,
-   });
-   DotNetCoreBuild(dbSolution, new DotNetCoreBuildSettings
    {
       Configuration = configuration,
    });
@@ -81,11 +68,6 @@ Task("Publish")
       Configuration = configuration,
       OutputDirectory = $"{artifactDirectory}/webapi/"
    });
-   DotNetCorePublish(dbSolution, new DotNetCorePublishSettings
-   {
-      Configuration = configuration,
-      OutputDirectory = $"{artifactDirectory}/db/"
-   });
    CopyFile("Ianf.Fittrack.Webapi/Docker/Dockerfile", $"{artifactDirectory}/webapi/Dockerfile");
    CopyDirectory("./fittrack/dist", $"{artifactDirectory}/angular/dist");
    CopyFile("./fittrack/Dockerfile", $"{artifactDirectory}/angular/Dockerfile");
@@ -93,24 +75,11 @@ Task("Publish")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// SET UP LOCAL CONFIGURATION
-///////////////////////////////////////////////////////////////////////////////
-
-Task("Local-Configuration")
-.IsDependentOn("Publish")
-.Does(() => {
-  var configFile = $"{artifactDirectory}/webapi/appsettings.json";
-  dynamic config = ParseJsonFromFile(configFile);
-  config.ConnectionStrings.FittrackDatabase = dbConnectionString;
-  SerializeJsonToPrettyFile<JObject>(configFile, config);
-});
-
-///////////////////////////////////////////////////////////////////////////////
 // SET UP INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("DC-Up")
-.IsDependentOn("Local-Configuration")
+.IsDependentOn("Publish")
 .Does(() => {
    DockerComposeUp(new DockerComposeUpSettings
    {
