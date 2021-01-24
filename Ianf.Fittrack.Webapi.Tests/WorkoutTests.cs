@@ -21,6 +21,7 @@ namespace Ianf.Fittrack.Webapi.Tests
             {
                 ProgramName = "Workout1",
                 WorkoutTime = _currentTime,
+                ProgramType = Ianf.Fittrack.Services.Dto.ProgramType.MadCow,
                 Exercises = new List<Ianf.Fittrack.Services.Dto.Exercise>()
                 {
                     new Ianf.Fittrack.Services.Dto.Exercise()
@@ -41,6 +42,7 @@ namespace Ianf.Fittrack.Webapi.Tests
             };
             var url = $"{_baseUrl}/Workout"; 
             var body = JsonConvert.SerializeObject(newWorkout);
+            Console.WriteLine(body);
             var content = new StringContent(body,
                                     Encoding.UTF8, 
                                     "application/json");

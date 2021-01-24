@@ -15,6 +15,7 @@ namespace Ianf.Fittrack.Repositories.Entities
         public int Id { get; set; }
         public int PlannedWorkoutId { get; set; }
         public string ProgramName { get; set; }
+        public byte ProgramType { get; set; }
         public DateTime WorkoutTime { get; set; }
 
         public virtual PlannedWorkout PlannedWorkout { get; set; }

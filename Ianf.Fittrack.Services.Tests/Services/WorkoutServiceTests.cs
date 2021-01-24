@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ianf.Fittrack.Services;
 using Ianf.Fittrack.Services.Domain;
+using Ianf.Fittrack.Services.Dto;
 using Ianf.Fittrack.Services.Interfaces;
 
 namespace Ianf.Fittrack.Services.Tests.Services
@@ -264,6 +265,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
+                ProgramType.MadCow,
                 DateTime.Now,
                 new List<Ianf.Fittrack.Services.Domain.Exercise>()
                 ));
@@ -318,6 +320,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
+                ProgramType.MadCow,
                 DateTime.Now,
                 new List<Ianf.Fittrack.Services.Domain.Exercise>()
                 ));
@@ -349,6 +352,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
+                ProgramType.MadCow,
                 DateTime.Now,
                 new List<Ianf.Fittrack.Services.Domain.Exercise>()
                 ));
@@ -380,6 +384,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.PlannedWorkout(
                 1,
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
+                ProgramType.MadCow,
                 DateTime.Now,
                 new List<Ianf.Fittrack.Services.Domain.Exercise>()
                 ));

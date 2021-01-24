@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ianf.Fittrack.Services.Dto;
 using Ianf.Fittrack.Services.Errors;
 using LanguageExt;
 
@@ -87,7 +88,7 @@ namespace Ianf.Fittrack.Services.Domain
                 );
 
             if(errors.Any()) return errors;
-            return new PlannedWorkout(workout.Id, programName, workout.WorkoutTime, exercises);
+            return new PlannedWorkout(workout.Id, programName, workout.ProgramType, workout.WorkoutTime, exercises);
         }
 
         public static Either<IEnumerable<DtoValidationError>, ActualWorkout> ValidateDto(this Dto.ActualWorkout workout)
@@ -119,14 +120,14 @@ namespace Ianf.Fittrack.Services.Domain
                     Some: (s) => programName = s
                 );
 
-            var plannedWorkout = new PlannedWorkout(0, programName, DateTime.Now, new List<Exercise>());
+            var plannedWorkout = new PlannedWorkout(0, programName, ProgramType.UpperLower, DateTime.Now, new List<Exercise>());
             ValidateDto(workout.PlannedWorkout).Match
             (
                 Left: (err) => errors.AddRange(err),
                 Right: (p) => plannedWorkout = p
             );
             if(errors.Any()) return errors;
-            return new ActualWorkout(workout.Id, plannedWorkout, programName, workout.WorkoutTime, exercises);
+            return new ActualWorkout(workout.Id, plannedWorkout, programName, workout.ProgramType, workout.WorkoutTime, exercises);
         }
     }
 }

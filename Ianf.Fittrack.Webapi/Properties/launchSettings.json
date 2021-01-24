@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Ianf.Gametracker.Webapi": {
+    "Ianf.Fittrack.Webapi": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
