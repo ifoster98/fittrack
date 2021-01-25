@@ -24,8 +24,6 @@ namespace Ianf.Fittrack.Webapi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<FittrackDbContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("FittrackDatabase")));
             services.AddTransient<IWorkoutService, WorkoutService>();
             services.AddTransient<IWorkoutRepository, WorkoutFileRepository>();
             services.AddCors(options => {
