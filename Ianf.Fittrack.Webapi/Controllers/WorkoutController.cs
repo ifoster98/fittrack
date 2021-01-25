@@ -19,12 +19,29 @@ namespace Ianf.Fittrack.Webapi.Controllers
             _workoutService = workoutService;
         }
 
+        [Route("/PlannedWorkout")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<int> AddPlannedWorkout(Services.Dto.PlannedWorkout workout)
         {
             var result = _workoutService.AddPlannedWorkout(workout);
+            ActionResult<int> returnValue = Ok();
+            result.Match(
+                Left: (err) => returnValue = BadRequest(err),
+                Right: (newWorkoutId) => returnValue = Ok(newWorkoutId)
+            );
+
+            return returnValue;
+        }
+
+        [Route("/ActualWorkout")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<int> AddActualWorkout(Services.Dto.ActualWorkout workout)
+        {
+            var result = _workoutService.AddActualWorkout(workout);
             ActionResult<int> returnValue = Ok();
             result.Match(
                 Left: (err) => returnValue = BadRequest(err),
