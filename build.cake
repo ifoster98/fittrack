@@ -119,6 +119,7 @@ Task("DC-Down")
       DockerComposeDown(new DockerComposeDownSettings
       {
          Files = new string[] {$"{artifactDirectory}/dockertest/docker-compose.yaml"},
+         Volumes = false
       });
 });
 
