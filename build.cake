@@ -91,10 +91,22 @@ Task("Publish-DockerCompose-Test")
    FileWriteText($"{artifactDirectory}/dockertest/docker-compose.yaml", dockerCompose);
 });
 
+Task("Publish-DockerCompose-Prod")
+.IsDependentOn("Test")
+.Does(() => {
+   EnsureDirectoryExists($"{artifactDirectory}/dockerprod/");
+   var dockerCompose = FileReadText("./docker-compose-template.yaml");
+   dockerCompose = dockerCompose.Replace("ENVIRONMENT", "prod");
+   dockerCompose = dockerCompose.Replace("SERVICE_PORT", "8082");
+   dockerCompose = dockerCompose.Replace("WEB_PORT", "80");
+   FileWriteText($"{artifactDirectory}/dockerprod/docker-compose.yaml", dockerCompose);
+});
+
 Task("Publish")
 .IsDependentOn("Publish-Aspnet")
 .IsDependentOn("Publish-DockerFiles")
 .IsDependentOn("Publish-DockerCompose-Test")
+.IsDependentOn("Publish-DockerCompose-Prod")
 .Does(() => {
 
 });
@@ -130,11 +142,51 @@ Task("DC-Down-Test")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// REBUILD ENVIRONMENT
+// SET UP PROD INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
-Task("Rebuild")
+
+Task("DC-Up-Prod")
+.IsDependentOn("Publish")
+.Does(() => {
+   DockerComposeUp(new DockerComposeUpSettings
+   {
+      Files = new string[] {$"{artifactDirectory}/dockerprod/docker-compose.yaml"},
+      ForceRecreate=true,
+      DetachedMode=true,
+      Build=true
+   }); 
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// TEAR DOWN PROD INFRASTRUCTURE
+///////////////////////////////////////////////////////////////////////////////
+
+Task("DC-Down-Prod")
+.Does(() => {
+   if(FileExists(artifactDirectory))
+      DockerComposeDown(new DockerComposeDownSettings
+      {
+         Files = new string[] {$"{artifactDirectory}/dockerprod/docker-compose.yaml"},
+         Volumes = false
+      });
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// REBUILD TEST ENVIRONMENT
+///////////////////////////////////////////////////////////////////////////////
+Task("Rebuild-Test")
 .IsDependentOn("DC-Down-Test")
 .IsDependentOn("DC-Up-Test")
+.Does(() => {
+
+});
+
+///////////////////////////////////////////////////////////////////////////////
+// REBUILD PROD ENVIRONMENT
+///////////////////////////////////////////////////////////////////////////////
+Task("Rebuild-Prod")
+.IsDependentOn("DC-Down-Prod")
+.IsDependentOn("DC-Up-Prod")
 .Does(() => {
 
 });
@@ -144,7 +196,7 @@ Task("Rebuild")
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("API-Tests")
-.IsDependentOn("Rebuild")
+.IsDependentOn("Rebuild-Test")
 .Does(() => {
     DotNetCoreTest("Ianf.Fittrack.Webapi.Tests/Ianf.Fittrack.Webapi.Tests.csproj", new DotNetCoreTestSettings
     {
