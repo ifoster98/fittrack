@@ -42,12 +42,12 @@ Task("Build")
    });
 
    // Angular build
-   StartProcess("ng", new ProcessSettings {
-      WorkingDirectory = "./fittrack/",
-      Arguments = new ProcessArgumentBuilder()
-         .Append("build --prod")
-      }
-   );
+//   StartProcess("ng", new ProcessSettings {
+//      WorkingDirectory = "./fittrack/",
+//      Arguments = new ProcessArgumentBuilder()
+//         .Append("build --prod")
+//      }
+//   );
 });
 
 Task("Test")

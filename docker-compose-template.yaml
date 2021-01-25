@@ -7,7 +7,6 @@ services:
     restart: always
     ports:
       - "8080:80"
-      - "444:443"
     depends_on: 
       - webserver
     links:
@@ -21,4 +20,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80:80"
-      - "443:443"
+    volumes:
+      - db-data:/App/data
+
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/ianfoster/dev/data
