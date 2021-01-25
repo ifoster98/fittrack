@@ -22,9 +22,9 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<int> AddNewWorkout(Services.Dto.PlannedWorkout workout)
+        public ActionResult<int> AddPlannedWorkout(Services.Dto.PlannedWorkout workout)
         {
-            var result = _workoutService.AddNewWorkout(workout);
+            var result = _workoutService.AddPlannedWorkout(workout);
             ActionResult<int> returnValue = Ok();
             result.Match(
                 Left: (err) => returnValue = BadRequest(err),

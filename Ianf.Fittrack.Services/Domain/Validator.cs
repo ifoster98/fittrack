@@ -117,7 +117,7 @@ namespace Ianf.Fittrack.Services.Domain
 
             if (workout.Exercises == null)
             {
-                errors.Add(new DtoValidationError("Exercises cannot be null.", "PlannedWorkout", "Exercises"));
+                errors.Add(new DtoValidationError("Exercises cannot be null.", "ActualWorkout", "Exercises"));
             }
             else
             {
@@ -135,7 +135,7 @@ namespace Ianf.Fittrack.Services.Domain
             var programName = new ProgramName();
             ProgramName.CreateProgramName(workout.ProgramName)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "Workout", "ProgramName")),
+                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "ActualWorkout", "ProgramName")),
                     Some: (s) => programName = s
                 );
 

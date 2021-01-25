@@ -14,7 +14,7 @@ namespace Ianf.Fittrack.Webapi.Tests
         private readonly DateTime _currentTime = DateTime.Now;
 
         [Fact]
-        public async System.Threading.Tasks.Task TestAddNewWorkoutAsync()
+        public async System.Threading.Tasks.Task TestAddPlannedWorkoutAsync()
         {
             // Assemble
             var newWorkout = new Ianf.Fittrack.Services.Dto.PlannedWorkout() 

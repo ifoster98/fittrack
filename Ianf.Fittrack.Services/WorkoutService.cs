@@ -18,7 +18,7 @@ namespace Ianf.Fittrack.Services
             _workoutRepository = workoutRepository;
         }
 
-        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddNewWorkout(Dto.PlannedWorkout workout) => 
+        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddPlannedWorkout(Dto.PlannedWorkout workout) => 
             workout
                 .ValidateDto()
                 .Bind(ValidateWorkoutToAdd)
@@ -45,6 +45,22 @@ namespace Ianf.Fittrack.Services
                     .First()
                     .ToDto())
                 : None;
+        }
+
+        public Either<IEnumerable<DtoValidationError>, PositiveInt> AddActualWorkout(Dto.ActualWorkout workout) => 
+            workout
+                .ValidateDto()
+                .Bind(ValidateWorkoutToAdd)
+                .Map(w => _workoutRepository.AddWorkout(w));
+
+        public Either<IEnumerable<DtoValidationError>, Domain.ActualWorkout> ValidateWorkoutToAdd(Domain.ActualWorkout workout)
+        {
+            var errors = new List<DtoValidationError>();
+            if (workout.Exercises.Count == 0) errors.Add(new DtoValidationError("Must have exercises mapped in a new workout.", "ActualWorkout", "Exercises"));
+            var foo = _workoutRepository.HasWorkout(workout.WorkoutTime, workout.ProgramType, workout.ProgramName);
+            if(foo) errors.Add(new DtoValidationError("Duplicate workout definition.", "ActualWorkout", ""));
+            if (errors.Any()) return errors;
+            return workout;
         }
     }
 }

@@ -45,6 +45,30 @@ namespace Ianf.Fittrack.Services.Tests.Services
                 }
             };
 
+        public Ianf.Fittrack.Services.Dto.ActualWorkout GetSampleActualWorkout() =>
+            new Ianf.Fittrack.Services.Dto.ActualWorkout() 
+            {
+                ProgramName = programName,
+                WorkoutTime = workoutTime,
+                Exercises = new List<Ianf.Fittrack.Services.Dto.Exercise>()
+                {
+                    new Ianf.Fittrack.Services.Dto.Exercise()
+                    {
+                        ExerciseType = Ianf.Fittrack.Services.Dto.ExerciseType.Deadlift,
+                        Order = 1,
+                        Sets = new List<Ianf.Fittrack.Services.Dto.Set>()
+                        {
+                            new Ianf.Fittrack.Services.Dto.Set()
+                            {
+                                Reps = 5,
+                                Weight = 130,
+                                Order = 1
+                            }
+                        }
+                    }
+                }
+            };
+
         public WorkoutServiceTests()
         {
             _workoutRepository = new Mock<IWorkoutRepository>();
@@ -53,7 +77,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutSuccess()
+        public void TestAddPlannedWorkoutSuccess()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
@@ -62,7 +86,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
                 .Returns(Ianf.Fittrack.Services.Domain.PositiveInt.CreatePositiveInt(1).IfNone(new Ianf.Fittrack.Services.Domain.PositiveInt()));
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             _workoutRepository.Verify(w => w.AddWorkout(It.IsAny<Ianf.Fittrack.Services.Domain.PlannedWorkout>()));
@@ -73,14 +97,14 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfProgramNameIsEmpty()
+        public void TestAddPlannedWorkoutFailsIfProgramNameIsEmpty()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
             newWorkout.ProgramName = string.Empty;
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -93,14 +117,14 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfProgramNameAndDateIsDuplicate()
+        public void TestAddPlannedWorkoutFailsIfProgramNameAndDateIsDuplicate()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
             _workoutRepository.Setup(w => w.HasWorkout(It.IsAny<DateTime>(), It.IsAny<Ianf.Fittrack.Services.Dto.ProgramType>(), It.IsAny<Ianf.Fittrack.Services.Domain.ProgramName>())).Returns(true);
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -113,7 +137,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExerciseOrderIsNotPositive()
+        public void TestAddPlannedWorkoutFailsIfExerciseOrderIsNotPositive()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
@@ -123,7 +147,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             newWorkout.Exercises.Add(exercise);
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -136,7 +160,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetRepsIsNotPositive()
+        public void TestAddPlannedWorkoutFailsIfSetRepsIsNotPositive()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
@@ -147,7 +171,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             exercise.Sets.Add(set);
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -160,7 +184,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetWeightIsNotValid()
+        public void TestAddPlannedWorkoutFailsIfSetWeightIsNotValid()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
@@ -171,7 +195,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             exercise.Sets.Add(set);
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -184,7 +208,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfSetOrderIsNotPositive()
+        public void TestAddPlannedWorkoutFailsIfSetOrderIsNotPositive()
         {
             // Assemble
             var newWorkout = GetSamplePlannedWorkout();
@@ -195,7 +219,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             exercise.Sets.Add(set);
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -208,7 +232,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExercisesListIsNull()
+        public void TestAddPlannedWorkoutFailsIfExercisesListIsNull()
         {
             // Assemble
             var newWorkout = new Ianf.Fittrack.Services.Dto.PlannedWorkout()
@@ -219,7 +243,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
@@ -232,7 +256,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         }
 
         [Fact]
-        public void TestAddNewWorkoutFailsIfExercisesListHasNoExercises()
+        public void TestAddPlannedWorkoutFailsIfExercisesListHasNoExercises()
         {
             // Assemble
             var newWorkout = new Ianf.Fittrack.Services.Dto.PlannedWorkout()
@@ -243,12 +267,215 @@ namespace Ianf.Fittrack.Services.Tests.Services
             };
 
             // Act
-            var result = _workoutService.AddNewWorkout(newWorkout);
+            var result = _workoutService.AddPlannedWorkout(newWorkout);
 
             // Assert
             result.Match(
                 Left: (err) => {
                     Assert.Equal("PlannedWorkout", err.First().DtoType);
+                    Assert.Equal("Exercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+ 
+        [Fact]
+        public void TestAddActualWorkoutSuccess()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            _workoutRepository
+                .Setup(w => w.AddWorkout(It.IsAny<Ianf.Fittrack.Services.Domain.ActualWorkout>()))
+                .Returns(Ianf.Fittrack.Services.Domain.PositiveInt.CreatePositiveInt(1).IfNone(new Ianf.Fittrack.Services.Domain.PositiveInt()));
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            _workoutRepository.Verify(w => w.AddWorkout(It.IsAny<Ianf.Fittrack.Services.Domain.ActualWorkout>()));
+            result.Match(
+                Left: (err) => Assert.False(true, "Expected no errors to be returned."),
+                Right: (newId) => Assert.Equal(1, newId.Value)
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfProgramNameIsEmpty()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            newWorkout.ProgramName = string.Empty;
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("ActualWorkout", err.First().DtoType);
+                    Assert.Equal("ProgramName", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfProgramNameAndDateIsDuplicate()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            _workoutRepository.Setup(w => w.HasWorkout(It.IsAny<DateTime>(), It.IsAny<Ianf.Fittrack.Services.Dto.ProgramType>(), It.IsAny<Ianf.Fittrack.Services.Domain.ProgramName>())).Returns(true);
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Duplicate workout definition.", err.First().ErrorMessage);
+                    Assert.Equal("ActualWorkout", err.First().DtoType);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfExerciseOrderIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            var exercise = newWorkout.Exercises.First();
+            exercise.Order = 0;
+            newWorkout.Exercises.Clear();
+            newWorkout.Exercises.Add(exercise);
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Exercise", err.First().DtoType);
+                    Assert.Equal("Order", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfSetRepsIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Reps = -2;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Reps", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfSetWeightIsNotValid()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Weight = 130.1234M;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Weight", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfSetOrderIsNotPositive()
+        {
+            // Assemble
+            var newWorkout = GetSampleActualWorkout();
+            var exercise = newWorkout.Exercises.First();
+            var set = exercise.Sets.First();
+            set.Order = -4;
+            exercise.Sets.Clear();
+            exercise.Sets.Add(set);
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("Set", err.First().DtoType);
+                    Assert.Equal("Order", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfExercisesListIsNull()
+        {
+            // Assemble
+            var newWorkout = new Ianf.Fittrack.Services.Dto.ActualWorkout()
+            {
+                ProgramName = programName,
+                WorkoutTime = workoutTime,
+                Exercises = null
+            };
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("ActualWorkout", err.First().DtoType);
+                    Assert.Equal("Exercises", err.First().DtoProperty);
+                },
+                Right: (newId) => Assert.False(true, "Expected error.")
+            );
+        }
+
+        [Fact]
+        public void TestAddActualWorkoutFailsIfExercisesListHasNoExercises()
+        {
+            // Assemble
+            var newWorkout = new Ianf.Fittrack.Services.Dto.ActualWorkout()
+            {
+                ProgramName = programName,
+                WorkoutTime = workoutTime,
+                Exercises = new List<Ianf.Fittrack.Services.Dto.Exercise>()
+            };
+
+            // Act
+            var result = _workoutService.AddActualWorkout(newWorkout);
+
+            // Assert
+            result.Match(
+                Left: (err) => {
+                    Assert.Equal("ActualWorkout", err.First().DtoType);
                     Assert.Equal("Exercises", err.First().DtoProperty);
                 },
                 Right: (newId) => Assert.False(true, "Expected error.")
