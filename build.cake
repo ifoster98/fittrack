@@ -43,12 +43,12 @@ Task("Build")
    });
 
    // Angular build
-//   StartProcess("ng", new ProcessSettings {
-//      WorkingDirectory = "./fittrack/",
-//      Arguments = new ProcessArgumentBuilder()
-//         .Append("build --prod")
-//      }
-//   );
+   StartProcess("ng", new ProcessSettings {
+      WorkingDirectory = "./fittrack/",
+      Arguments = new ProcessArgumentBuilder()
+         .Append("build --prod")
+      }
+   );
 });
 
 Task("Test")
@@ -86,8 +86,8 @@ Task("Publish-DockerCompose-Test")
    EnsureDirectoryExists($"{artifactDirectory}/dockertest/");
    var dockerCompose = FileReadText("./docker-compose-template.yaml");
    dockerCompose = dockerCompose.Replace("ENVIRONMENT", "test");
-   dockerCompose = dockerCompose.Replace("SERVICE_PORT", "80");
-   dockerCompose = dockerCompose.Replace("WEB_PORT", "8080");
+   dockerCompose = dockerCompose.Replace("SERVICE_PORT", "8080");
+   dockerCompose = dockerCompose.Replace("WEB_PORT", "8081");
    FileWriteText($"{artifactDirectory}/dockertest/docker-compose.yaml", dockerCompose);
 });
 

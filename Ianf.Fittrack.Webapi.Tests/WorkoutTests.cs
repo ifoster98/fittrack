@@ -10,7 +10,7 @@ namespace Ianf.Fittrack.Webapi.Tests
     public class WorkoutTests
     {
         private readonly HttpClient _client = new HttpClient();
-        private readonly string _baseUrl = "http://localhost";
+        private readonly string _baseUrl = "http://localhost:8080";
         private readonly DateTime _currentTime = DateTime.Now;
 
         [Fact]
