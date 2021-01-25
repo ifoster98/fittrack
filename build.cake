@@ -2,6 +2,7 @@
 #addin nuget:?package=Cake.Json&version=5.2.0
 #addin nuget:?package=Newtonsoft.Json&version=11.0.2
 #addin nuget:?package=Cake.Npm&version=0.17.0
+#addin nuget:?package=Cake.FileHelpers&version=3.3.0
 using System.Runtime.CompilerServices;
 using System.Threading;
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,25 +80,30 @@ Task("Publish-DockerFiles")
    CopyFile("./fittrack/nginx.conf", $"{artifactDirectory}/angular/nginx.conf");
 });
 
-Task("Publish-DockerCompose")
+Task("Publish-DockerCompose-Test")
 .IsDependentOn("Test")
 .Does(() => {
    EnsureDirectoryExists($"{artifactDirectory}/dockertest/");
-   CopyFile("./docker-compose-template.yaml", $"{artifactDirectory}/dockertest/docker-compose.yaml");
+   var dockerCompose = FileReadText("./docker-compose-template.yaml");
+   dockerCompose = dockerCompose.Replace("ENVIRONMENT", "test");
+   dockerCompose = dockerCompose.Replace("SERVICE_PORT", "80");
+   dockerCompose = dockerCompose.Replace("WEB_PORT", "8080");
+   FileWriteText($"{artifactDirectory}/dockertest/docker-compose.yaml", dockerCompose);
 });
 
 Task("Publish")
 .IsDependentOn("Publish-Aspnet")
 .IsDependentOn("Publish-DockerFiles")
-.IsDependentOn("Publish-DockerCompose")
+.IsDependentOn("Publish-DockerCompose-Test")
 .Does(() => {
 
 });
+
 ///////////////////////////////////////////////////////////////////////////////
-// SET UP INFRASTRUCTURE
+// SET UP TEST INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("DC-Up")
+Task("DC-Up-Test")
 .IsDependentOn("Publish")
 .Does(() => {
    DockerComposeUp(new DockerComposeUpSettings
@@ -110,10 +116,10 @@ Task("DC-Up")
 });
 
 ///////////////////////////////////////////////////////////////////////////////
-// TEAR DOWN INFRASTRUCTURE
+// TEAR DOWN TEST INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
 
-Task("DC-Down")
+Task("DC-Down-Test")
 .Does(() => {
    if(FileExists(artifactDirectory))
       DockerComposeDown(new DockerComposeDownSettings
@@ -127,8 +133,8 @@ Task("DC-Down")
 // REBUILD ENVIRONMENT
 ///////////////////////////////////////////////////////////////////////////////
 Task("Rebuild")
-.IsDependentOn("DC-Down")
-.IsDependentOn("DC-Up")
+.IsDependentOn("DC-Down-Test")
+.IsDependentOn("DC-Up-Test")
 .Does(() => {
 
 });
