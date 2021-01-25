@@ -10,6 +10,7 @@ namespace Ianf.Fittrack.Repositories
 {
     public class WorkoutFileRepository : IWorkoutRepository
     {
+        private string dataDirectory = "data";
         private string dataFile = "fittrack.json";
 
         public List<PlannedWorkout> GetPlannedWorkoutsAfterDate(DateTime workoutDate)
@@ -45,7 +46,10 @@ namespace Ianf.Fittrack.Repositories
             return JsonConvert.DeserializeObject<FittrackFileContext>(File.ReadAllText(dataFile));
         }
 
-        private void SaveFittrackFileContext(FittrackFileContext context) =>
-            File.WriteAllText(dataFile, JsonConvert.SerializeObject(context));
+        private void SaveFittrackFileContext(FittrackFileContext context) {
+            if(!Directory.Exists(dataDirectory)) Directory.CreateDirectory(dataDirectory);
+            var storage = $"{dataDirectory}/{dataFile}";
+            File.WriteAllText(storage, JsonConvert.SerializeObject(context));
+        }
     }
 }
