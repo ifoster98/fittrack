@@ -2,7 +2,7 @@ version: "3"
 
 services:
   webui: 
-    build: "./artifacts/angular/"
+    build: "../angular/"
     container_name: gtui1
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
       - webserver
 
   webserver: 
-    build: "./artifacts/webapi/"
+    build: "../webapi/"
     container_name: gtweb1
     restart: always
     environment:

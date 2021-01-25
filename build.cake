@@ -60,7 +60,7 @@ Task("Test")
     });
 });
 
-Task("Publish")
+Task("Publish-AspNet")
 .IsDependentOn("Test")
 .Does(() => {
    DotNetCorePublish(webSolution, new DotNetCorePublishSettings
@@ -68,12 +68,31 @@ Task("Publish")
       Configuration = configuration,
       OutputDirectory = $"{artifactDirectory}/webapi/"
    });
+});
+
+Task("Publish-DockerFiles")
+.IsDependentOn("Test")
+.Does(() => {
    CopyFile("Ianf.Fittrack.Webapi/Docker/Dockerfile", $"{artifactDirectory}/webapi/Dockerfile");
    CopyDirectory("./fittrack/dist", $"{artifactDirectory}/angular/dist");
    CopyFile("./fittrack/Dockerfile", $"{artifactDirectory}/angular/Dockerfile");
    CopyFile("./fittrack/nginx.conf", $"{artifactDirectory}/angular/nginx.conf");
 });
 
+Task("Publish-DockerCompose")
+.IsDependentOn("Test")
+.Does(() => {
+   EnsureDirectoryExists($"{artifactDirectory}/dockertest/");
+   CopyFile("./docker-compose-template.yaml", $"{artifactDirectory}/dockertest/docker-compose.yaml");
+});
+
+Task("Publish")
+.IsDependentOn("Publish-Aspnet")
+.IsDependentOn("Publish-DockerFiles")
+.IsDependentOn("Publish-DockerCompose")
+.Does(() => {
+
+});
 ///////////////////////////////////////////////////////////////////////////////
 // SET UP INFRASTRUCTURE
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,6 +102,7 @@ Task("DC-Up")
 .Does(() => {
    DockerComposeUp(new DockerComposeUpSettings
    {
+      Files = new string[] {$"{artifactDirectory}/dockertest/docker-compose.yaml"},
       ForceRecreate=true,
       DetachedMode=true,
       Build=true
@@ -96,7 +116,10 @@ Task("DC-Up")
 Task("DC-Down")
 .Does(() => {
    if(FileExists(artifactDirectory))
-      DockerComposeDown();
+      DockerComposeDown(new DockerComposeDownSettings
+      {
+         Files = new string[] {$"{artifactDirectory}/dockertest/docker-compose.yaml"},
+      });
 });
 
 ///////////////////////////////////////////////////////////////////////////////
