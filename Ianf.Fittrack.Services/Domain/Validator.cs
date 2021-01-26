@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ianf.Fittrack.Services.Dto;
 using Ianf.Fittrack.Services.Errors;
 using LanguageExt;
 
@@ -31,17 +29,29 @@ namespace Ianf.Fittrack.Services.Domain
         public static Either<IEnumerable<DtoValidationError>, Set> ValidateDto(this Dto.Set set)
         {
             var errors = new List<DtoValidationError>();
-            var reps = new PositiveInt();
-            PositiveInt.CreatePositiveInt(set.Reps)
+            var plannedReps = new PositiveInt();
+            PositiveInt.CreatePositiveInt(set.PlannedReps)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid amount for reps.", "Set", "Reps") ),
-                    Some: (s) => reps = s
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for planned reps.", "Set", "PlannedReps") ),
+                    Some: (s) => plannedReps = s
                 );
-            var weight = new Weight();
-            Weight.CreateWeight(set.Weight)
+            var plannedWeight = new Weight();
+            Weight.CreateWeight(set.PlannedWeight)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid amount for weight.", "Set", "Weight")),
-                    Some: (s) => weight = s
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for planned weight.", "Set", "PlannedWeight")),
+                    Some: (s) => plannedWeight = s
+                );
+            var actualReps = new NonNegativeInt();
+            NonNegativeInt.CreateNonNegativeInt(set.ActualReps)
+                .Match(
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for actual reps.", "Set", "ActualReps") ),
+                    Some: (s) => actualReps = s
+                );
+            var actualWeight = new Weight();
+            Weight.CreateWeight(set.ActualWeight)
+                .Match(
+                    None: () => errors.Add(new DtoValidationError("Invalid amount for actual weight.", "Set", "ActualWeight")),
+                    Some: (s) => actualWeight = s
                 );
             var order = new PositiveInt();
             PositiveInt.CreatePositiveInt(set.Order)
@@ -50,7 +60,7 @@ namespace Ianf.Fittrack.Services.Domain
                     Some: (s) => order = s
                 );
             if(errors.Any()) return errors;
-            return new Set(reps, weight, order);
+            return new Set(plannedReps, plannedWeight, actualReps, actualWeight, order);
         }
 
         public static Either<IEnumerable<DtoValidationError>, Exercise> ValidateDto(this Dto.Exercise exercise)
@@ -77,14 +87,14 @@ namespace Ianf.Fittrack.Services.Domain
             return new Exercise(exercise.ExerciseType, sets, order);
         }
 
-        public static Either<IEnumerable<DtoValidationError>, PlannedWorkout> ValidateDto(this Dto.PlannedWorkout workout)
+        public static Either<IEnumerable<DtoValidationError>, Workout> ValidateDto(this Dto.Workout workout)
         {
             var errors = new List<DtoValidationError>();
             var exercises = new List<Exercise>();
 
             if (workout.Exercises == null)
             {
-                errors.Add(new DtoValidationError("Exercises cannot be null.", "PlannedWorkout", "Exercises"));
+                errors.Add(new DtoValidationError("Exercises cannot be null.", "Workout", "Exercises"));
             }
             else
             {
@@ -102,45 +112,12 @@ namespace Ianf.Fittrack.Services.Domain
             var programName = new ProgramName();
             ProgramName.CreateProgramName(workout.ProgramName)
                 .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "PlannedWorkout", "ProgramName")),
+                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "Workout", "ProgramName")),
                     Some: (s) => programName = s
                 );
 
             if(errors.Any()) return errors;
-            return new PlannedWorkout(programName, workout.ProgramType, workout.WorkoutTime, exercises);
-        }
-
-        public static Either<IEnumerable<DtoValidationError>, ActualWorkout> ValidateDto(this Dto.ActualWorkout workout)
-        {
-            var errors = new List<DtoValidationError>();
-            var exercises = new List<Exercise>();
-
-            if (workout.Exercises == null)
-            {
-                errors.Add(new DtoValidationError("Exercises cannot be null.", "ActualWorkout", "Exercises"));
-            }
-            else
-            {
-                workout.Exercises.ForEach(e =>
-                {
-                    var ex = ValidateDto(e);
-                    ex.Match
-                    (
-                        Left: (err) => errors.AddRange(err),
-                        Right: (r) => exercises.Add(r)
-                    );
-                });
-            }
-
-            var programName = new ProgramName();
-            ProgramName.CreateProgramName(workout.ProgramName)
-                .Match(
-                    None: () => errors.Add(new DtoValidationError("Invalid program name.", "ActualWorkout", "ProgramName")),
-                    Some: (s) => programName = s
-                );
-
-            if(errors.Any()) return errors;
-            return new ActualWorkout(programName, workout.ProgramType, workout.WorkoutTime, exercises);
+            return new Workout(programName, workout.ProgramType, workout.WorkoutTime, exercises);
         }
     }
 }

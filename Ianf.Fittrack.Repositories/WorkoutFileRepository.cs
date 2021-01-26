@@ -13,7 +13,7 @@ namespace Ianf.Fittrack.Repositories
         private string dataDirectory = "data";
         private string dataFile = "fittrack.json";
 
-        public List<PlannedWorkout> GetPlannedWorkoutsAfterDate(DateTime workoutDate)
+        public List<Workout> GetWorkoutsAfterDate(DateTime workoutDate)
         {
             throw new NotImplementedException();
         }
@@ -21,21 +21,13 @@ namespace Ianf.Fittrack.Repositories
         public bool HasWorkout(DateTime workoutDate, Services.Dto.ProgramType programType, ProgramName programName)
         {
             var context = GetFittrackFileContext();
-            return context.PlannedWorkouts.Any(p => p.WorkoutTime.Equals(workoutDate) && p.ProgramType.Equals(programType) && p.ProgramName.Equals(programName));
+            return context.Workouts.Any(p => p.WorkoutTime.Equals(workoutDate) && p.ProgramType.Equals(programType) && p.ProgramName.Equals(programName));
         }
 
-        public PositiveInt AddWorkout(PlannedWorkout workout)
+        public PositiveInt AddWorkout(Workout workout)
         {
             var context = GetFittrackFileContext();
-            context.PlannedWorkouts.Add(workout);
-            SaveFittrackFileContext(context);
-            return PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt());
-        }
-
-        public PositiveInt AddWorkout(ActualWorkout workout)
-        {
-            var context = GetFittrackFileContext();
-            context.ActualWorkouts.Add(workout);
+            context.Workouts.Add(workout);
             SaveFittrackFileContext(context);
             return PositiveInt.CreatePositiveInt(1).IfNone(new PositiveInt());
         }

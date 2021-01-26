@@ -6,9 +6,8 @@ namespace Ianf.Fittrack.Services.Interfaces
 {
     public interface IWorkoutRepository
     {
-        PositiveInt AddWorkout(PlannedWorkout workout);
-        PositiveInt AddWorkout(ActualWorkout workout);
-        List<PlannedWorkout> GetPlannedWorkoutsAfterDate(DateTime workoutDate);
+        PositiveInt AddWorkout(Workout workout);
+        List<Workout> GetWorkoutsAfterDate(DateTime workoutDate);
         bool HasWorkout(DateTime workoutDate, Services.Dto.ProgramType programType, ProgramName programName);
     }
 }

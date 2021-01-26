@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ianf.Fittrack.Services.Dto
 {
-    public struct PlannedWorkout 
+    public struct Workout 
     {
         public string ProgramName { get; set; }
         public ProgramType ProgramType { get; set; }

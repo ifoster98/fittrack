@@ -19,13 +19,13 @@ namespace Ianf.Fittrack.Webapi.Controllers
             _workoutService = workoutService;
         }
 
-        [Route("/PlannedWorkout")]
+        [Route("/Workout")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<int> AddPlannedWorkout(Services.Dto.PlannedWorkout workout)
+        public ActionResult<int> AddWorkout(Services.Dto.Workout workout)
         {
-            var result = _workoutService.AddPlannedWorkout(workout);
+            var result = _workoutService.AddWorkout(workout);
             ActionResult<int> returnValue = Ok();
             result.Match(
                 Left: (err) => returnValue = BadRequest(err),
@@ -35,23 +35,7 @@ namespace Ianf.Fittrack.Webapi.Controllers
             return returnValue;
         }
 
-        [Route("/ActualWorkout")]
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<int> AddActualWorkout(Services.Dto.ActualWorkout workout)
-        {
-            var result = _workoutService.AddActualWorkout(workout);
-            ActionResult<int> returnValue = Ok();
-            result.Match(
-                Left: (err) => returnValue = BadRequest(err),
-                Right: (newWorkoutId) => returnValue = Ok(newWorkoutId)
-            );
-
-            return returnValue;
-        }
-
-        [HttpGet]
+        [HttpGet("/Workout/{workoutDay}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetNextWorkout(DateTime workoutDay)

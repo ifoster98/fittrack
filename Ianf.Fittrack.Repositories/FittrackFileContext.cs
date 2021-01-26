@@ -5,13 +5,11 @@ namespace Ianf.Fittrack.Repositories
 {
     public class FittrackFileContext
     {
-        public List<PlannedWorkout> PlannedWorkouts { get; set; }
-        public List<ActualWorkout> ActualWorkouts { get; set; }
+        public List<Workout> Workouts { get; set; }
 
         public FittrackFileContext()
         {
-            PlannedWorkouts = new List<PlannedWorkout>();
-            ActualWorkouts = new List<ActualWorkout>();
+            Workouts = new List<Workout>();
         }
     }
 }

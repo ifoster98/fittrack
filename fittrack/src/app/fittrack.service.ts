@@ -6,9 +6,13 @@ import { Fooble, Match, MatchEvent } from './psuedo-ngrx.service';
   providedIn: 'root'
 })
 export class FittrackService {
-  private baseUrl = 'http://localhost';
+  private baseUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
+
+  getNextWorkout(currentDay: string){
+    return this.http.get(`${this.baseUrl}/Workout/${currentDay}`, { observe: 'response' });
+  }
 
   login(userId: number | undefined) {
     return this.http.get(`${this.baseUrl}/LoginWithUserId/${userId}`, { observe: 'response' });
