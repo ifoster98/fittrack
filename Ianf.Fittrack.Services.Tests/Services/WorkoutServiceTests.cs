@@ -503,7 +503,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now, programName);
+            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now);
 
             // Assert
             nextWorkout.Match
@@ -526,38 +526,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now, programName);
-
-            // Assert
-            nextWorkout.Match
-            (
-                None: () => Assert.True(true, ""),
-                Some: (s) => Assert.False(true, $"Expected 'None' return. Got {s}.")
-            );
-        }
-
-        [Fact]
-        public void TestGetNextWorkoutReturnsNoneIfDifferentProgramName()
-        {
-            // Assemble
-            var timestamp = DateTime.Now;
-            var newWorkout = GetSamplePlannedWorkout();
-            newWorkout.WorkoutTime = timestamp.AddDays(1);
-            var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.PlannedWorkout(
-                ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
-                ProgramType.MadCow,
-                DateTime.Now,
-                new List<Ianf.Fittrack.Services.Domain.Exercise>()
-                ));
-            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
-
-            _workoutRepository.Setup(w => w.GetPlannedWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.PlannedWorkout>
-            {
-                workout, workoutTwo
-            });
-
-            // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now, "Diffferent Program");
+            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now);
 
             // Assert
             nextWorkout.Match
@@ -588,7 +557,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MaxValue, programName);
+            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MaxValue);
 
             // Assert
             nextWorkout.Match
@@ -619,7 +588,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MinValue, programName);
+            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MinValue);
 
             // Assert
             nextWorkout.Match

@@ -34,11 +34,10 @@ namespace Ianf.Fittrack.Services
             return workout;
         }
 
-        public Option<Dto.PlannedWorkout> GetNextWorkout(DateTime workoutDay, string programName) 
+        public Option<Dto.PlannedWorkout> GetNextWorkout(DateTime workoutDay) 
         {
             if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
             var workouts = _workoutRepository.GetPlannedWorkoutsAfterDate(workoutDay);
-            workouts = workouts.Where(w => w.ProgramName.Value.Equals(programName)).ToList();
             return workouts.Any()
                 ? Some(workouts
                     .OrderBy(w => w.WorkoutTime)
