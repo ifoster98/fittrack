@@ -10,6 +10,6 @@ namespace Ianf.Fittrack.Services.Interfaces
     {
         Either<IEnumerable<DtoValidationError>, PositiveInt> AddWorkout(Dto.Workout workout);
 
-        Option<Dto.Workout> GetNextWorkout(DateTime workoutDay);
+        Option<Dto.Workout> GetWorkoutForDate(DateTime workoutDay);
     }
 }

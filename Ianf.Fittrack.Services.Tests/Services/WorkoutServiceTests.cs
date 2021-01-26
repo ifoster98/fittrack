@@ -263,14 +263,13 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assemble
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
-            newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.Workout(
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
                 ProgramType.MadCow,
                 DateTime.Now,
                 new List<Ianf.Fittrack.Services.Domain.Exercise>()
                 ));
-            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
+            var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(1) };
 
             _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
             {
@@ -278,7 +277,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now);
+            var nextWorkout = _workoutService.GetWorkoutForDate(DateTime.Now);
 
             // Assert
             nextWorkout.Match
@@ -301,7 +300,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.Now);
+            var nextWorkout = _workoutService.GetWorkoutForDate(DateTime.Now);
 
             // Assert
             nextWorkout.Match
@@ -317,7 +316,6 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assemble
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
-            newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.Workout(
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
                 ProgramType.MadCow,
@@ -332,7 +330,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MaxValue);
+            var nextWorkout = _workoutService.GetWorkoutForDate(DateTime.MaxValue);
 
             // Assert
             nextWorkout.Match
@@ -348,7 +346,6 @@ namespace Ianf.Fittrack.Services.Tests.Services
             // Assemble
             var timestamp = DateTime.Now;
             var newWorkout = GetSampleWorkout();
-            newWorkout.WorkoutTime = timestamp.AddDays(1);
             var workout = newWorkout.ValidateDto().IfLeft(new Ianf.Fittrack.Services.Domain.Workout(
                 ProgramName.CreateProgramName(programName).IfNone(new Ianf.Fittrack.Services.Domain.ProgramName()),
                 ProgramType.MadCow,
@@ -363,7 +360,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
             });
 
             // Act
-            var nextWorkout = _workoutService.GetNextWorkout(DateTime.MinValue);
+            var nextWorkout = _workoutService.GetWorkoutForDate(DateTime.MinValue);
 
             // Assert
             nextWorkout.Match

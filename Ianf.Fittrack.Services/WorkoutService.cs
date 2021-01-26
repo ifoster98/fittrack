@@ -34,7 +34,7 @@ namespace Ianf.Fittrack.Services
             return workout;
         }
 
-        public Option<Dto.Workout> GetNextWorkout(DateTime workoutDay) 
+        public Option<Dto.Workout> GetWorkoutForDate(DateTime workoutDay) 
         {
             if(workoutDay == DateTime.MinValue || workoutDay == DateTime.MaxValue) return None;
             var workouts = _workoutRepository.GetWorkoutsAfterDate(workoutDay);

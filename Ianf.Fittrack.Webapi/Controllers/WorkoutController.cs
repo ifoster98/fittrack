@@ -38,9 +38,9 @@ namespace Ianf.Fittrack.Webapi.Controllers
         [HttpGet("/Workout/{workoutDay}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetNextWorkout(DateTime workoutDay)
+        public IActionResult GetWorkoutForDate(DateTime workoutDay)
         {
-            var result = _workoutService.GetNextWorkout(workoutDay);
+            var result = _workoutService.GetWorkoutForDate(workoutDay);
             IActionResult returnValue = Ok();
             result.Match(
                 None: () => returnValue = NotFound(),
