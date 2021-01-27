@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FittrackService } from './fittrack.service';
+import { PseudongrxService } from './pseudongrx.service';
 
-describe('FittrackService', () => {
-  let service: FittrackService;
+describe('PseudongrxService', () => {
+  let service: PseudongrxService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FittrackService);
+    service = TestBed.inject(PseudongrxService);
   });
 
   it('should be created', () => {

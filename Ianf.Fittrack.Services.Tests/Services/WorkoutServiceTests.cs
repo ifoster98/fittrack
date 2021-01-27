@@ -271,7 +271,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(1) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsOnOrAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
             {
                 workout, workoutTwo
             });
@@ -295,7 +295,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
         public void TestGetNextWorkoutReturnsNoneIfNoWorkouts()
         {
             // Assemble
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsOnOrAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
             {
             });
 
@@ -324,7 +324,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsOnOrAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
             {
                 workout, workoutTwo
             });
@@ -354,7 +354,7 @@ namespace Ianf.Fittrack.Services.Tests.Services
                 ));
             var workoutTwo = workout with { WorkoutTime = timestamp.AddDays(2) };
 
-            _workoutRepository.Setup(w => w.GetWorkoutsAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
+            _workoutRepository.Setup(w => w.GetWorkoutsOnOrAfterDate(It.IsAny<DateTime>())).Returns(new List<Ianf.Fittrack.Services.Domain.Workout>
             {
                 workout, workoutTwo
             });

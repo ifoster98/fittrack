@@ -13,9 +13,10 @@ namespace Ianf.Fittrack.Repositories
         private string dataDirectory = "data";
         private string dataFile = "fittrack.json";
 
-        public List<Workout> GetWorkoutsAfterDate(DateTime workoutDate)
+        public List<Workout> GetWorkoutsOnOrAfterDate(DateTime workoutDate)
         {
-            throw new NotImplementedException();
+            var context = GetFittrackFileContext();
+            return context.Workouts.Where(w => w.WorkoutTime >= workoutDate).ToList();
         }
 
         public bool HasWorkout(DateTime workoutDate, Services.Dto.ProgramType programType, ProgramName programName)
@@ -34,8 +35,9 @@ namespace Ianf.Fittrack.Repositories
 
         private FittrackFileContext GetFittrackFileContext() 
         {
-            if(!File.Exists(dataFile)) return new FittrackFileContext();
-            return JsonConvert.DeserializeObject<FittrackFileContext>(File.ReadAllText(dataFile));
+            var storage = $"{dataDirectory}/{dataFile}";
+            if(!File.Exists(storage)) return new FittrackFileContext();
+            return JsonConvert.DeserializeObject<FittrackFileContext>(File.ReadAllText(storage));
         }
 
         private void SaveFittrackFileContext(FittrackFileContext context) {

@@ -61,5 +61,27 @@ namespace Ianf.Fittrack.Webapi.Tests
             var resultContent = await result.Content.ReadAsStringAsync();
             Assert.Equal("{\"value\":1}", resultContent);
         }
+
+        [Fact]
+        public async System.Threading.Tasks.Task TestGetWorkoutForDate()
+        {
+            // Assemble
+            var newWorkout = GetWorkout();
+            var url = $"{_baseUrl}/Workout"; 
+            var body = JsonConvert.SerializeObject(newWorkout);
+            var content = new StringContent(body,
+                                    Encoding.UTF8, 
+                                    "application/json");
+            var result = await _client.PostAsync(url, content);
+            result.EnsureSuccessStatusCode();
+
+            // Act
+            url = $"{_baseUrl}/Workout/{this._currentTime.ToString("yyyy-MM-ddThh:mm:ss")}"; 
+            Console.WriteLine(url);
+            result = await _client.GetAsync(url);
+
+            // Assert
+            result.EnsureSuccessStatusCode();
+        }
     }
 }
