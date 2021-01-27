@@ -1,5 +1,5 @@
-using System;
-using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Ianf.Fittrack.Services.Domain;
 using Xunit;
 
@@ -88,6 +88,20 @@ namespace Ianf.Fittrack.Services.Tests.Domain
  
             // Assert
             Assert.False(result);
+        }
+
+        [Fact]
+        public void TestSerialisation()
+        {
+            // Assemble
+            var testFirstItem = PositiveInt.CreatePositiveInt(42).IfNone(new PositiveInt());
+            var serialisedData = JsonSerializer.Serialize(testFirstItem);
+
+            // Act
+            var deserialisedItem = JsonSerializer.Deserialize<PositiveInt>(serialisedData);
+
+            // Assert
+            Assert.Equal(42, deserialisedItem.Value);
         }
     }
 }

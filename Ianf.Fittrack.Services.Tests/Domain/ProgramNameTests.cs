@@ -1,6 +1,6 @@
 #nullable disable // Explicitly allow nulls for testing of types.
-using System;
-using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Ianf.Fittrack.Services.Domain;
 using Xunit;
 
@@ -89,5 +89,19 @@ namespace Ianf.Fittrack.Services.Tests.Domain
             // Assert
             Assert.False(result);
         }
+
+        [Fact]
+        public void TestSerialisation()
+        {
+            // Assemble
+            var testFirstItem = ProgramName.CreateProgramName("Test").IfNone(new ProgramName());
+            var serialisedData = JsonSerializer.Serialize(testFirstItem);
+
+            // Act
+            var deserialisedItem = JsonSerializer.Deserialize<ProgramName>(serialisedData);
+
+            // Assert
+            Assert.Equal("Test", deserialisedItem.Value);
+        }   
     }
 }

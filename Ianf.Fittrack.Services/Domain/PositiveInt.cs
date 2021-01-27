@@ -6,7 +6,7 @@ namespace Ianf.Fittrack.Services.Domain
 {
     public struct PositiveInt : IEquatable<PositiveInt>
     {
-        public int Value { get; }
+        public int Value { get; set; }
 
         private PositiveInt(int positiveInt) => Value = positiveInt;
 

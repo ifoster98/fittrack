@@ -1,3 +1,5 @@
+using System.Runtime;
+using System.Runtime.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,7 +13,7 @@ namespace Ianf.Fittrack.Webapi.Tests
     {
         private readonly HttpClient _client = new HttpClient();
         private readonly string _baseUrl = "http://localhost:8080";
-        private readonly DateTime _currentTime = DateTime.Now.AddDays(-1);
+        private readonly DateTime _currentTime = DateTime.Now;
 
         private Ianf.Fittrack.Services.Dto.Workout GetWorkout() 
         {
@@ -47,6 +49,7 @@ namespace Ianf.Fittrack.Webapi.Tests
         {
             // Assemble
             var newWorkout = GetWorkout();
+            newWorkout.WorkoutTime = _currentTime.AddDays(-1);
             var url = $"{_baseUrl}/Workout"; 
             var body = JsonConvert.SerializeObject(newWorkout);
             var content = new StringContent(body,
@@ -77,11 +80,13 @@ namespace Ianf.Fittrack.Webapi.Tests
 
             // Act
             url = $"{_baseUrl}/Workout/{this._currentTime.ToString("yyyy-MM-ddThh:mm:ss")}"; 
-            Console.WriteLine(url);
             result = await _client.GetAsync(url);
 
             // Assert
             result.EnsureSuccessStatusCode();
+            var resultContent = await result.Content.ReadAsStringAsync();
+            var workout = JsonConvert.DeserializeObject<Ianf.Fittrack.Services.Dto.Workout>(resultContent);
+            Assert.Equal(130, workout.Exercises[0].Sets[0].PlannedWeight);
         }
     }
 }

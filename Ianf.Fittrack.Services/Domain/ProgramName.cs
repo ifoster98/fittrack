@@ -6,7 +6,7 @@ namespace Ianf.Fittrack.Services.Domain
 {
     public struct ProgramName : IEquatable<ProgramName>
     {
-        public string Value { get; }
+        public string Value { get; set; }
 
         private ProgramName(string programName) => Value = programName;
 

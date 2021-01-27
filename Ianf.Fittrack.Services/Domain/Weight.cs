@@ -6,7 +6,7 @@ namespace Ianf.Fittrack.Services.Domain
 {
     public struct Weight : IEquatable<Weight>
     {
-        public decimal Value { get; }
+        public decimal Value { get; set; }
 
         private Weight(decimal weight) => Value = weight;
 
