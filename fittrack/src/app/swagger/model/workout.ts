@@ -13,8 +13,8 @@ import { Exercise } from './exercise';
 import { ProgramType } from './programType';
 
 export interface Workout { 
-    programName?: string;
-    programType?: ProgramType;
-    workoutTime?: Date;
-    exercises?: Array<Exercise>;
+    programName: string;
+    programType: ProgramType;
+    workoutTime: Date;
+    exercises: Array<Exercise>;
 }

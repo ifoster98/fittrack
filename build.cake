@@ -118,7 +118,9 @@ Task("Publish")
 Task("DC-Up-Test")
 .IsDependentOn("Publish")
 .Does(() => {
-   DeleteFile("../data/test/fittrack.json");
+   var dataFile = "../data/test/fittrack.json";
+   if(FileExists(dataFile))
+     DeleteFile(dataFile);
    DockerComposeUp(new DockerComposeUpSettings
    {
       Files = new string[] {$"{artifactDirectory}/dockertest/docker-compose.yaml"},

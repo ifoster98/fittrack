@@ -16,4 +16,8 @@ export class PseudongrxService {
   getCurrentWorkout(): Workout | undefined {
     return this.currentWorkout;
   }
+
+  hasWorkout(): boolean {
+    return this.currentWorkout !== undefined;
+  }
 }
