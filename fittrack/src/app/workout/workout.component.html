@@ -2,11 +2,5 @@
     <div class="program-name">{{getWorkoutName()}}</div>
     <div *ngFor="let exercise of getWorkout()?.exercises" class="exercises">
       {{getExerciseTypeName(exercise.exerciseType)}}
-      <div *ngFor="let set of exercise.sets">
-          <div>Planned Reps: {{set.plannedReps}}</div>
-          <div>Planned Weight: {{set.plannedWeight}}</div>
-          <div>Actual Reps: {{set.actualReps}}</div>
-          <div>Actual Weight: {{set.actualWeight}}</div>
-      </div>
     </div>
 <div>
