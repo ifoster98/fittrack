@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FittrackService } from '../fittrack.service';
 import { PseudongrxService } from '../pseudongrx.service';
-import { ExerciseType, ProgramType, Workout } from '../swagger/model/models';
+import { ExerciseType, Workout } from '../swagger/model/models';
+import { WorkoutService } from '../workout.service';
 
 @Component({
   selector: 'app-workout',
@@ -11,15 +12,22 @@ import { ExerciseType, ProgramType, Workout } from '../swagger/model/models';
 export class WorkoutComponent implements OnInit {
   errorMessage: string = '';
 
-  constructor(private _ngrx: PseudongrxService, private _fittrack: FittrackService) { }
+  constructor(private _ngrx: PseudongrxService, private _fittrack: FittrackService, private _workoutService: WorkoutService) { }
 
   ngOnInit(): void {
     let currentDateTime = this.getCurrentDateWithTimeZone();
     this._fittrack.getWorkoutForDate(currentDateTime).subscribe(response => {
       if(response.body) {
         this.setWorkout(<Workout>response.body);
+        this.setFlattenedList(<Workout>response.body);
       }
     });
+  }
+
+  setFlattenedList(workout: Workout) {
+    let flattenedSetList = this._workoutService.flattenWorkoutToList(workout);
+    this._ngrx.setFlattenedSetList(flattenedSetList);
+    this._ngrx.setCurrentFlattenedSet(flattenedSetList[0]);
   }
 
   hasWorkout(): boolean {

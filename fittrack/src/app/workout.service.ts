@@ -1,5 +1,6 @@
+import { flatten } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { FlattenedSetList } from './models/flattened-set-list.model';
+import { FlattenedSet } from './models/flattened-set.class';
 import { Workout } from './swagger/model/models';
 
 @Injectable({
@@ -9,8 +10,8 @@ export class WorkoutService {
 
   constructor() { }
 
-  flattenWorkoutToList(workout: Workout) : Array<FlattenedSetList>{
-    let resultSets = new Array<FlattenedSetList>();
+  flattenWorkoutToList(workout: Workout) : Array<FlattenedSet>{
+    let resultSets = new Array<FlattenedSet>();
     workout.exercises.forEach(exercise => {
       exercise.sets?.forEach(set => {
         if(exercise.exerciseType !== undefined){
@@ -21,25 +22,25 @@ export class WorkoutService {
     return resultSets;
   }
 
-  getNextElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : FlattenedSetList | undefined{
+  getNextElement(flattenedList: Array<FlattenedSet>, currentElement: FlattenedSet) : FlattenedSet | undefined{
     let currentPosition = flattenedList.indexOf(currentElement);
     if(currentPosition == -1) return undefined;
     return flattenedList[currentPosition + 1];
   }
 
-  getPreviousElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : FlattenedSetList | undefined{
+  getPreviousElement(flattenedList: Array<FlattenedSet>, currentElement: FlattenedSet) : FlattenedSet | undefined{
     let currentPosition = flattenedList.indexOf(currentElement);
     if(currentPosition == -1) return undefined;
     return flattenedList[currentPosition - 1];
   }
 
-  hasPreviousElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : boolean {
+  hasPreviousElement(flattenedList: Array<FlattenedSet>, currentElement: FlattenedSet) : boolean {
     let currentPosition = flattenedList.indexOf(currentElement);
     if(currentPosition == -1) return false;
     return currentPosition > 0;
   }
 
-  hasNextElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : boolean {
+  hasNextElement(flattenedList: Array<FlattenedSet>, currentElement: FlattenedSet) : boolean {
     let currentPosition = flattenedList.indexOf(currentElement);
     if(currentPosition == -1) return false;
     return currentPosition < flattenedList.length - 1;

@@ -1,0 +1,28 @@
+<div>
+    <form [formGroup]="setForm">
+      <div>
+        Exercise
+        <input type="text" formControlName="exerciseType">
+      </div>
+      <div>
+        Planned Reps
+        <input type="text" formControlName="plannedReps">
+      </div>
+      <div>
+        Planned Weight
+        <input type="text" formControlName="plannedWeight">
+      </div>
+      <div>
+        Actual Reps
+        <input type="text" formControlName="actualReps">
+      </div>
+      <div>
+        Actual Weight
+        <input type="text" formControlName="actualWeight">
+      </div>
+    </form>
+</div>
+<div>
+    <button (click)="previous()">Previous</button>
+    <button (click)="next()">Next</button>
+</div>

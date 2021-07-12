@@ -1,6 +1,5 @@
-import { flatten } from '@angular/compiler';
 import { TestBed } from '@angular/core/testing';
-import { FlattenedSetList } from './models/flattened-set-list.model';
+import { FlattenedSet } from './models/flattened-set.class';
 import { ExerciseType, ProgramType } from './swagger/model/models';
 
 import { WorkoutService } from './workout.service';
@@ -97,7 +96,7 @@ describe('WorkoutService', () => {
     ]
 };
 
-  let demoFlattenedList = [
+  let demoFlattenedList: FlattenedSet[] = [
     {exerciseType: ExerciseType.Squat, set: {plannedReps: 5, plannedWeight: 80, actualReps: 5, actualWeight: 80, order: 1}},
     {exerciseType: ExerciseType.BenchPress, set: {plannedReps: 5, plannedWeight: 50, actualReps: 5, actualWeight: 50, order: 2}},
     {exerciseType: ExerciseType.BentOverRow, set: {plannedReps: 5, plannedWeight: 40, actualReps: 5, actualWeight: 40, order: 3}},

@@ -7,12 +7,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { WorkoutComponent } from './workout/workout.component';
 import { AdminComponent } from './admin/admin.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SetComponent } from './set/set.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WorkoutComponent,
-    AdminComponent
+    AdminComponent,
+    SetComponent,
   ],
   imports: [
     BrowserModule,
