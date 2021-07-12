@@ -116,11 +116,11 @@ describe('WorkoutService', () => {
     expect(flattenedList.length).toBe(9);
   });
 
-  it('should return the exercise type BenchPress as the exercise name for the first three sets in the list', () => {
+  it('should return the exercise type Squat as the exercise name for the first three sets in the list', () => {
     let flattenedList = service.flattenWorkoutToList(demoData);
-    expect(flattenedList[0].exerciseType).toBe(ExerciseType.BenchPress);
-    expect(flattenedList[1].exerciseType).toBe(ExerciseType.BenchPress);
-    expect(flattenedList[2].exerciseType).toBe(ExerciseType.BenchPress);
+    expect(flattenedList[0].exerciseType).toBe(ExerciseType.Squat);
+    expect(flattenedList[1].exerciseType).toBe(ExerciseType.Squat);
+    expect(flattenedList[2].exerciseType).toBe(ExerciseType.Squat);
   });
 
   it('should return the exercise type BentOverRow as the exercise name for the first three sets in the list', () => {

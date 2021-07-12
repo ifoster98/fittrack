@@ -23,11 +23,11 @@ describe('Start workout', () => {
         goToSetsPage();
 
         verifyContentsOfSet({
-            exerciseType: 'BenchPress',
-            plannedReps: '12',
-            plannedWeight: '57.5', 
-            actualReps: '12', 
-            actualWeight: '57.5'
+            exerciseType: 'Squat',
+            plannedReps: '5',
+            plannedWeight: '80', 
+            actualReps: '5', 
+            actualWeight: '80'
         })
     })
     
@@ -46,11 +46,11 @@ describe('Start workout', () => {
 
         cy.get('#next-button').click()
         verifyContentsOfSet({
-            exerciseType: 'BenchPress',
-            plannedReps: '10',
-            plannedWeight: '57.5', 
-            actualReps: '10', 
-            actualWeight: '57.5'
+            exerciseType: 'Squat',
+            plannedReps: '5',
+            plannedWeight: '80', 
+            actualReps: '5', 
+            actualWeight: '80'
         })
     })
 
@@ -62,7 +62,7 @@ describe('Start workout', () => {
 
     it('should have disabled next button when at end of workout', () => {
         goToSetsPage();
-        clickNextMultipleTimes(8)
+        clickNextMultipleTimes(14)
 
         cy.get('#next-button').should('be.disabled')
     })
@@ -70,22 +70,22 @@ describe('Start workout', () => {
     it('should move to the previous set when previous is clicked', () => {
         goToSetsPage();
 
-        clickNextMultipleTimes(3)
+        clickNextMultipleTimes(5)
         verifyContentsOfSet({
-            exerciseType: 'BentOverRow',
-            plannedReps: '12',
-            plannedWeight: '52.5', 
-            actualReps: '12', 
-            actualWeight: '52.5'
+            exerciseType: 'BenchPress',
+            plannedReps: '5',
+            plannedWeight: '50', 
+            actualReps: '5', 
+            actualWeight: '50'
         })
 
         cy.get('#previous-button').click()
         verifyContentsOfSet({
-            exerciseType: 'BenchPress',
-            plannedReps: '8',
-            plannedWeight: '57.5', 
-            actualReps: '8', 
-            actualWeight: '57.5'
+            exerciseType: 'Squat',
+            plannedReps: '5',
+            plannedWeight: '80', 
+            actualReps: '5', 
+            actualWeight: '80'
         })
     })
 })

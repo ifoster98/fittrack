@@ -2,8 +2,9 @@ namespace Ianf.Fittrack.Services.Dto
 {
     public enum ProgramType
     {
-        UpperLower,
-        FiveByFive,
-        MadCow
+        UpperLower = 0,
+        FiveByFiveA = 1,
+        FiveByFiveB = 2,
+        MadCow = 3
     }
 }
