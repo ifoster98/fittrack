@@ -32,4 +32,16 @@ export class WorkoutService {
     if(currentPosition == -1) return undefined;
     return flattenedList[currentPosition - 1];
   }
+
+  hasPreviousElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : boolean {
+    let currentPosition = flattenedList.indexOf(currentElement);
+    if(currentPosition == -1) return false;
+    return currentPosition > 0;
+  }
+
+  hasNextElement(flattenedList: Array<FlattenedSetList>, currentElement: FlattenedSetList) : boolean {
+    let currentPosition = flattenedList.indexOf(currentElement);
+    if(currentPosition == -1) return false;
+    return currentPosition < flattenedList.length - 1;
+  }
 }

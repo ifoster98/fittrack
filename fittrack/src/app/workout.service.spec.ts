@@ -174,4 +174,41 @@ describe('WorkoutService', () => {
     let previousElement = service.getPreviousElement(demoFlattenedList, currentElement);
     expect(previousElement).toBe(undefined);
   });
+
+  it('should return true if there is a previous element in the flattenedlist to the current element', () => {
+    let currentElement = demoFlattenedList[1];
+    let hasPreviousElement = service.hasPreviousElement(demoFlattenedList, currentElement);
+    expect(hasPreviousElement).toBeTrue();
+  });
+
+  it('should return false if there is not a previous element in the flattenedlist to the current element', () => {
+    let currentElement = demoFlattenedList[0];
+    let hasPreviousElement = service.hasPreviousElement(demoFlattenedList, currentElement);
+    expect(hasPreviousElement).toBeFalse();
+  });
+
+  it('should return false if the current element does not exist', () => {
+    let currentElement = {exerciseType: ExerciseType.OverheadPress, set: {plannedReps: 5, plannedWeight: 50, actualReps: 5, actualWeight: 50, order: 2}};
+    let hasPreviousElement = service.hasPreviousElement(demoFlattenedList, currentElement);
+    expect(hasPreviousElement).toBeFalse();
+  });
+  
+  it('should return true if there is a next element in the flattenedlist to the current element', () => {
+    let currentElement = demoFlattenedList[1];
+    let hasNextElement = service.hasNextElement(demoFlattenedList, currentElement);
+    expect(hasNextElement).toBeTrue();
+  });
+
+  it('should return false if there is not a next element in the flattenedlist to the current element', () => {
+    let currentElement = demoFlattenedList[2];
+    let hasNextElement = service.hasNextElement(demoFlattenedList, currentElement);
+    expect(hasNextElement).toBeFalse();
+  });
+
+  it('should return false if the current element does not exist', () => {
+    let currentElement = {exerciseType: ExerciseType.OverheadPress, set: {plannedReps: 5, plannedWeight: 50, actualReps: 5, actualWeight: 50, order: 2}};
+    let hasNextElement = service.hasNextElement(demoFlattenedList, currentElement);
+    expect(hasNextElement).toBeFalse();
+  });
+  
 });
