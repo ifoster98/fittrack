@@ -1,28 +1,28 @@
-<div>
+<div class="exercise-set">
     <form [formGroup]="setForm">
-      <div>
-        Exercise
+      <div class="exercise-type">
+        <div class="exercise-type">Exercise</div>
         <input type="text" formControlName="exerciseType">
       </div>
-      <div>
-        Planned Reps
+      <div class="exercise-set-entry">
+        <div class="exercise-set-title">Planned Reps</div>
         <input type="text" formControlName="plannedReps">
       </div>
-      <div>
-        Planned Weight
+      <div class="exercise-set-entry">
+        <div class="exercise-set-title">Planned Weight</div>
         <input type="text" formControlName="plannedWeight">
       </div>
-      <div>
-        Actual Reps
+      <div class="exercise-set-entry">
+        <div class="exercise-set-title">Actual Reps</div>
         <input type="text" formControlName="actualReps">
       </div>
-      <div>
-        Actual Weight
+      <div class="exercise-set-entry">
+        <div class="exercise-set-title">Actual Weight</div>
         <input type="text" formControlName="actualWeight">
       </div>
     </form>
 </div>
-<div>
-    <button (click)="previous()">Previous</button>
-    <button (click)="next()">Next</button>
+<div class="exercise-set-navigation">
+    <button id="previous-button" class="exercise-set-navigation-button-previous" (click)="previous()" [disabled]="!hasPrevious()">Previous</button>
+    <button id="next-button" class="exercise-set-navigation-button-next" (click)="next()" [disabled]="!hasNext()">Next</button>
 </div>

@@ -34,6 +34,14 @@ export class SetComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  hasPrevious(): boolean {
+    return this._workoutService.hasPreviousElement(this._ngrx.getFlattenedSetList(), this.flattenedSet);
+  }
+
+  hasNext(): boolean { 
+    return this._workoutService.hasNextElement(this._ngrx.getFlattenedSetList(), this.flattenedSet);
+  }
+
   previous(): void {
     let newFlattenedSet = this._workoutService.getPreviousElement(this._ngrx.getFlattenedSetList(), this.flattenedSet);
     if(newFlattenedSet !== undefined){
